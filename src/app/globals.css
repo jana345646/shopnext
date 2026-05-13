@@ -1,1 +1,6 @@
 @import "tailwindcss";
+@layer utilities {
+  .font-beatrice {
+    font-family: var(--font-beatrice);
+  }
+}
