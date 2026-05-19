@@ -1,40 +1,37 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local"; // tells next.js that the font exists locaaly in our project folder
+// layout.tsx file is a wrapper that all the pages run inside it and we put in it the components that will be displayes in all the pages
 import "./globals.css";
+import { Inter } from "next/font/google"; // this is a package in next that gets the fonts from the fonts system in next
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ProductsProvider from "@/context/ProductsProvider";
+import CategoriesProvider from "@/context/CategoriesProvider";
 
-const beatrice = localFont({
-  //local font is a function tahat make the project understands the local fonts
-  // we use this v.name in this file only
-  src: [
-    {
-      // لازم تقولي له يدخل فولدر fonts وبعدين beatrice-font-family
-      path: "./fonts/beatrice-font-family/BeatriceDeckTRIAL-Regular-BF64829e9182459.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "./fonts/beatrice-font-family/BeatriceTRIAL-Bold-BF64829e8fd7dc6.ttf",
-      weight: "700",
-      style: "normal",
-    },
-  ],
-  variable: "--font-beatrice", // we use it with tailwind config file
+const inter = Inter({
+  // inter is a object we create it to save the settings of the font
+  //Inter is a function in next fint systems that get the font and edit it's settings
+  subsets: ["latin"], // is the language of the font
+  weight: ["400", "700", "500"], //font weight of the font to download this weights only
 });
 
 export default function RootLayout({
-  children,
+  children, // this is a children prop tha layout component recieve it automatically from next.js
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode; // the type of the children could be anything react can render it(text , component , html element , ..)
 }) {
+  // in body we call the beatprice variable to be applied on the whole project , if we didnt use it so use the sans font
   return (
     <html lang="en">
-      <body className={`${beatrice.variable} font-sans`}>
-        <Navbar />
-        <main className="flex-grow">{children}</main>
+      <body className={inter.className}>
+        <CategoriesProvider>
+          <ProductsProvider>
+            <Navbar />
+            <main>{children}</main>
+          </ProductsProvider>
+        </CategoriesProvider>
         <Footer />
       </body>
     </html>
   );
 }
+//className={inter.className} we apply this font on the body , classname is a property in the inter object to apply the font class to the body
+//we are using the provider
