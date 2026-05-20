@@ -28,6 +28,7 @@ export default function ProductsProvider({
       if (!res.ok) throw new Error("Failed to fetch products");
 
       const data: Product[] = await res.json();
+      console.log("fetched from client");
 
       setProducts(data);
       setFilteredProducts(data);
