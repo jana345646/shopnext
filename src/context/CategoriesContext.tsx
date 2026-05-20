@@ -8,4 +8,9 @@ type CategoryContextType = {
   SetError: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const CategoryContext = createContext<CategoryContextType | null>(null);
+export const CategoryContext = createContext<CategoryContextType>({
+  category: [],
+  SetCategory: () => {},
+  error: false,
+  SetError: () => {},
+});

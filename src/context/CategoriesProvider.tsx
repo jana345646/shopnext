@@ -1,32 +1,38 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CategoryContext } from "./CategoriesContext";
 import { Category } from "@/types";
 
-function CategoriesProvider({ children }: { children: React.ReactNode }) {
-  const [category, SetCategory] = useState<Category>([]);
+export default function CategoriesProvider({
+  children,
+  initialCategories = [],
+}: {
+  children: React.ReactNode;
+  initialCategories: Category[];
+}) {
+  const [category, SetCategory] = useState<Category[]>(initialCategories);
   const [error, SetError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function getCategories() {
-      try {
-        const res = await fetch("https://fakestoreapi.com/products/categories");
+  const getCategories = async () => {
+    try {
+      const res = await fetch("https://fakestoreapi.com/products/categories");
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch categories");
-        }
+      if (!res.ok) throw new Error();
 
-        const data = await res.json();
-        SetCategory(data);
-      } catch (err) {
-        console.error("Categories fetch error:", err);
-        SetError("failed");
-      }
+      const data = await res.json();
+      SetCategory(data);
+    } catch (err) {
+      console.error(err);
+      SetError("failed");
     }
+  };
 
-    getCategories();
-  }, []);
+  useEffect(() => {
+    if (initialCategories.length === 0) {
+      getCategories();
+    }
+  }, [initialCategories]);
 
   return (
     <CategoryContext.Provider value={{ category, SetCategory, error }}>
@@ -34,4 +40,3 @@ function CategoriesProvider({ children }: { children: React.ReactNode }) {
     </CategoryContext.Provider>
   );
 }
-export default CategoriesProvider;

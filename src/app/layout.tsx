@@ -5,6 +5,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
+import { Metadata } from "next";
+
+export const metadata = {
+  title: "ShopNext",
+  description: "Online shopping app",
+};
 
 const inter = Inter({
   // inter is a object we create it to save the settings of the font
@@ -24,7 +30,6 @@ export default function RootLayout({
       <body className={inter.className}>
         <CategoriesProvider>
           <ProductsProvider>
-            <Navbar />
             <main>{children}</main>
           </ProductsProvider>
         </CategoriesProvider>

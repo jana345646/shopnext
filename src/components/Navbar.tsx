@@ -21,7 +21,7 @@ function Navbar() {
         <p className="font-normal text-[0.6rem] text-white">ONLINE SHOPPING</p>
       </div>
       <div className="flex gap-8 font-normal text-lg text-white">
-        {!error && (
+        {!error && ( // if there is no error
           <div className="w-full flex gap-3">
             <button
               className="rounded-[0.3rem] font-bold p-2 text-white"

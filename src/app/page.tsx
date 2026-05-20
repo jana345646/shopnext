@@ -1,43 +1,46 @@
-"use client"; // as usecontext work only on the client side
+import ProductsProvider from "@/context/ProductsProvider";
+import ProductsClient from "@/components/ProductsClient";
+import Navbar from "@/components/Navbar";
+import { Product } from "@/types";
+import { Metadata } from "next"; // this is a type in next
 
-import { useContext } from "react";
-import { ProductsContext } from "@/context/ProductsContext";
-import ProductCard from "@/components/ProductCard";
-import Sorting from "@/components/Sorting";
-import ProductSkeleton from "@/components/ProductSkeleton";
-import ProductsError from "@/components/ProductsError";
-import OfflineBanner from "@/components/OfflineBanner";
-import EmptyState from "@/components/EmptyState";
+export const metadata: Metadata = {
+  title: "Products",
+  description: "Browse all products",
+};
 
-export default function Products() {
-  const context = useContext(ProductsContext);
-
-  if (!context) return null;
-
-  const { products, filteredProducts, loading, error, fetchProducts, offline } =
-    context;
-
-  if (error) {
-    return <ProductsError onRetry={fetchProducts} />;
+async function getProductsFromServer(): Promise<Product[]> {
+  try {
+    const res = await fetch("https://fakestoreapi.com/pro");
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Server Fetch Error:", error);
+    return [];
   }
+}
+
+async function getCategoriesFromServer(): Promise<Product[]> {
+  try {
+    const res = await fetch("https://fakestoreapi.com/products/categories");
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Server Fetch Error:", error);
+    return [];
+  }
+}
+
+export default async function Products() {
+  const serverData = await getProductsFromServer();
 
   return (
-    <div className="pt-3 pb-6 bg-[#E9E9E9] px-[4.5rem]">
-      <OfflineBanner show={offline} />
+    <ProductsProvider initialProducts={serverData}>
+      <Navbar />
 
-      <Sorting />
-
-      <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 items-start justify-center">
-        {loading ? (
-          [...Array(8)].map((_, key) => <ProductSkeleton key={key} />)
-        ) : filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
-        ) : (
-          <EmptyState />
-        )}
-      </div>
-    </div>
+      <ProductsClient />
+    </ProductsProvider>
   );
 }

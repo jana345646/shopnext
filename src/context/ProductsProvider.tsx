@@ -1,5 +1,3 @@
-// provider is the main file that wraps our project to enable any component to get the data directly from the context
-// in the provider we fetch the data then store it in the context
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,68 +5,54 @@ import { Product } from "@/types";
 import { ProductsContext } from "./ProductsContext";
 
 export default function ProductsProvider({
-  //the provider taks the children as any component that needs to get the data from the context must be wrapprd with the provider
   children,
+  initialProducts = [],
 }: {
   children: React.ReactNode;
+  initialProducts: Product[];
 }) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [filteredProducts, setFilteredProducts] =
+    useState<Product[]>(initialProducts);
   const [sortType, SetSortType] = useState<"asc" | "desc">("asc");
-  const [selectedCategory, setSelectedCategory] = useState<string>(""); //string without an array as the user will choose only one option
-  const [loading, SetLoading] = useState<boolean>(true);
-  const [error, SetError] = useState<boolean>(false);
-  const [offline, SetOffline] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [offline, setOffline] = useState(false);
+  const [error, SetError] = useState<string | null>(null);
 
-  const fetchProducts = async () => {
+  const fetchProductsClientSide = async () => {
     try {
-      SetLoading(true);
-
-      SetError(false);
+      SetError(null);
 
       const res = await fetch("https://fakestoreapi.com/products");
 
-      if (!res.ok) {
-        throw new Error();
-      }
+      if (!res.ok) throw new Error("Failed to fetch products");
 
       const data: Product[] = await res.json();
 
-      await new Promise((res) => setTimeout(res, 300));
-
       setProducts(data);
-
       setFilteredProducts(data);
-
-      localStorage.setItem("products", JSON.stringify(data));
-    } catch (err) {
-      SetError(true);
-      SetLoading(false);
-
-      const cached = localStorage.getItem("products");
-
-      if (cached) {
-        const parsed = JSON.parse(cached);
-
-        setProducts(parsed);
-        setFilteredProducts(parsed);
-      }
-    } finally {
-      SetLoading(false);
+    } catch (error: any) {
+      SetError(error.message || "Something went wrong");
     }
+  };
+  const retryFetch = () => {
+    fetchProductsClientSide();
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (initialProducts.length > 0) {
+      setProducts(initialProducts);
+      setFilteredProducts(initialProducts);
+    } else if (products.length === 0) {
+      fetchProductsClientSide();
+    }
+  }, [initialProducts]);
 
   useEffect(() => {
-    const handleOffline = () => SetOffline(true);
-    const handleOnline = () => SetOffline(false);
-
+    const handleOffline = () => setOffline(true);
+    const handleOnline = () => setOffline(false);
     window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
-
     return () => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
@@ -76,9 +60,11 @@ export default function ProductsProvider({
   }, []);
 
   useEffect(() => {
+    if (!products || products.length === 0) return;
+
     let result = [...products];
 
-    if (selectedCategory) {
+    if (selectedCategory && selectedCategory !== "") {
       result = result.filter(
         (product) => product.category === selectedCategory,
       );
@@ -97,22 +83,21 @@ export default function ProductsProvider({
     <ProductsContext.Provider
       value={{
         products,
+        setProducts,
         filteredProducts,
         setFilteredProducts,
         sortType,
         SetSortType,
+        offline,
+        setOffline,
         selectedCategory,
         setSelectedCategory,
-        loading,
         error,
-        fetchProducts,
-        offline,
+        SetError,
+        retryFetch,
       }}
     >
       {children}
     </ProductsContext.Provider>
   );
 }
-//get from the products context the provider , then the provider share the value with the children
-//store the data in the context , then any child inside it can reach this values.
-//we are creating the provider

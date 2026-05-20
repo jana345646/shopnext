@@ -1,24 +1,32 @@
-import { createContext } from "react"; // this is a function that creates a context to store data in it so any component can reach the data from it directly
 import { Product } from "@/types";
+import { createContext } from "react"; // this is a function that creates a context to store data in it so any component can reach the data from it directly
 
-type ProductsContextType = {
-  // this is a type that define the type of the data that will be stored in this context
+export type ProductsContextType = {
   products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>; //react.dispatch this is the type of the setproducts(a function that changes the value of the state)
-  //React.SetStateAction it defines the type of the action(new data value) , so it's type must be product
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   filteredProducts: Product[];
   setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   sortType: "asc" | "desc";
   setSortType: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
-  loading: boolean;
-  SetLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  error: boolean;
-  SetError: React.Dispatch<React.SetStateAction<boolean>>;
   offline: boolean;
-  SetOffline: React.Dispatch<React.SetStateAction<boolean>>;
+  setOffline: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedCategory: string;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export const ProductsContext = createContext<ProductsContextType | null>(null);
+export const ProductsContext = createContext<ProductsContextType>({
+  products: [],
+  filteredProducts: [],
+  sortType: "asc",
+  setSortType: () => {},
+  setProducts: () => {},
+  setFilteredProducts: () => {},
+  offline: false,
+  setOffline: () => {},
+  selectedCategory: "",
+  setSelectedCategory: () => {},
+});
+
 //ProductsContext this is the name of the context
 // type of the context could be ProductsContextType or null , but inially it is null
 // the last line when it creates the context it automatically create with it a provider for this context
