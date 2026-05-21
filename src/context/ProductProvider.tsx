@@ -14,6 +14,7 @@ function ProductProvider({
   id: string;
 }) {
   const [product, SetProduct] = useState<Product | null>(null);
+  const [stepper, SetStepper] = useState<number>(1);
 
   async function GetProductFromClient() {
     const res = await fetch(`https://fakestoreapi.com/products/${id}`);
@@ -31,7 +32,7 @@ function ProductProvider({
   }, [serverProduct, id]);
 
   return (
-    <ProductContext.Provider value={{ product }}>
+    <ProductContext.Provider value={{ product, stepper, SetStepper }}>
       {children}
     </ProductContext.Provider>
   );

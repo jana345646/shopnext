@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
 import { Metadata } from "next";
+import CartProvider from "@/context/CartProvider";
 
 export const metadata = {
   title: "ShopNext",
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <CategoriesProvider>
           <ProductsProvider>
-            <main>{children}</main>
+            <CartProvider>
+              <main>{children}</main>
+            </CartProvider>
           </ProductsProvider>
         </CategoriesProvider>
         <Footer />

@@ -12,3 +12,8 @@ export interface Product {
 }
 
 export type Category = string[];
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
+};
