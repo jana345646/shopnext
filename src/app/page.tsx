@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 
 async function getProductsFromServer(): Promise<Product[]> {
   try {
-    const res = await fetch("https://fakestoreapi.com/pro");
+    const res = await fetch("https://fakestoreapi.com/products");
     if (!res.ok) return [];
     const data = await res.json();
+    console.log("fetched from server");
     return data;
   } catch (error) {
     console.error("Server Fetch Error:", error);

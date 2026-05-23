@@ -8,6 +8,7 @@ import OfflineBanner from "@/components/OfflineBanner";
 import EmptyState from "@/components/EmptyState";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import Error from "next/error";
+
 export default function ProductsClient() {
   const context = useContext(ProductsContext);
 
@@ -16,7 +17,7 @@ export default function ProductsClient() {
   const { filteredProducts, offline, products, error } = context;
 
   if (error) {
-    return <Error />;
+    return <Error statusCode={500} />;
   }
 
   return (
@@ -27,7 +28,7 @@ export default function ProductsClient() {
       <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 items-start justify-center">
         {!products || products.length === 0 ? (
           [...Array(8)].map((_, key) => <ProductSkeleton key={key} />)
-        ) : filteredProducts?.length > 0 ? (
+        ) : filteredProducts && filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))
