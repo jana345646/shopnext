@@ -2,12 +2,11 @@
 
 import { useContext } from "react";
 import { ProductContext } from "@/context/ProductContext";
-import CartContext from "@/context/CartContext";
 import Image from "next/image";
-import { RiStarSLine } from "react-icons/ri";
-import { FiMinus, FiPlus } from "react-icons/fi";
-import { IoCartOutline } from "react-icons/io5";
-import { FaRegHeart } from "react-icons/fa";
+import { FiMinus, FiPlus, FiEye } from "react-icons/fi";
+import RatingStars from "./RatingStars";
+import FavoriteButton from "./FavoriteButton";
+import CartContext from "@/context/CartContext";
 
 function ProductDetail() {
   const productData = useContext(ProductContext);
@@ -16,84 +15,71 @@ function ProductDetail() {
   if (!productData || !cartData) return null;
 
   const { product, stepper, SetStepper } = productData;
+  const { addToCart } = cartData;
 
-  const { cart, addToCart } = cartData;
-
-  const cartCount = cart.reduce((total, item) => {
-    // reduce it loops on the array to return only one value
-    return total + item.quantity;
-  }, 0); // the initial value is zero
+  if (!product) return null;
 
   return (
-    <div className="w-full h-[40rem] flex justify-between px-[5rem] items-center gap-5">
-      <div className="relative w-[20%] h-full">
-        {product?.image && (
-          <Image
-            src={product.image}
-            alt={product.title}
-            unoptimized
-            fill
-            className="object-contain"
-          />
-        )}
+    <div className="w-full h-[40rem] flex items-center justify-center px-[5rem] gap-[7rem]">
+      {/* Image */}
+      <div className="relative w-[20%] h-full flex items-center justify-center">
+        <Image
+          src={product.image}
+          alt={product.title}
+          fill
+          unoptimized
+          className="object-contain"
+        />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <span className="text-[Integral CF] font-bold text-[2.5rem]">
-            {product?.title}
-          </span>
+      {/* Content */}
+      <div className="flex flex-col gap-4 w-[50%]">
+        {/* Title + Favorite */}
+        <div className="flex items-center justify-between">
+          <span className="font-bold text-[2.5rem]">{product.title}</span>
 
-          <div className="relative flex items-center">
-            <IoCartOutline className="text-4xl" />
-            <FaRegHeart className="text-2xl" />
-            <span className="absolute -top-4 right-5 rounded-full px-2 text-sm">
-              {cartCount}
-            </span>
-          </div>
+          <FavoriteButton product={product} />
         </div>
 
-        <div className="flex">
-          <RiStarSLine className="text-3xl" />
+        <RatingStars rate={product?.rating?.rate ?? 0} />
 
-          <div className="w-full flex gap-5">
-            <span className="text-xl">{product?.rating.rate} / 5</span>
-
-            <span className="text-xl">{product?.rating.count}</span>
-          </div>
+        <div className="flex items-center gap-1">
+          <FiEye />
+          <span>{product?.rating?.count}</span>
         </div>
 
-        <span className="text-[Satoshi] font-bold text-[1.5rem]">
-          ${product?.price}
+        <span className="font-bold text-[1.5rem]">${product.price}</span>
+
+        <span className="text-sm text-[#00000099] leading-[1.5rem]">
+          {product.description}
         </span>
 
-        <span className="text-[Satoshi] text-center font-normal text-[0.7rem] text-[#00000099] leading-[1.3rem]">
-          {product?.description}
-        </span>
+        <span className="text-gray-600">{product.category}</span>
 
-        <span>{product?.category}</span>
+        {/* Stepper */}
+        <div className="flex justify-between">
+          <div className="flex w-[10rem] bg-[#F0F0F0] rounded-[3rem] p-3 justify-around">
+            <button
+              onClick={() => SetStepper((p) => p - 1)}
+              disabled={stepper === 1}
+            >
+              <FiMinus />
+            </button>
 
-        <div className="flex w-[10.6rem] bg-[#F0F0F0] rounded-[3.8rem] p-3 justify-around">
+            <span>{stepper}</span>
+
+            <button onClick={() => SetStepper((p) => p + 1)}>
+              <FiPlus />
+            </button>
+          </div>
+
           <button
-            onClick={() => SetStepper((prev) => prev - 1)}
-            disabled={stepper === 1}
+            className="bg-black text-white px-6 py-3 rounded-[3rem] w-[50%]"
+            onClick={() => addToCart(product, stepper)}
           >
-            <FiMinus />
-          </button>
-
-          <span>{stepper}</span>
-
-          <button onClick={() => SetStepper((prev) => prev + 1)}>
-            <FiPlus />
+            Add to Cart
           </button>
         </div>
-
-        <button
-          className="bg-[#1E1E1E] text-white p-3 rounded-[3.8rem] w-[25%]"
-          onClick={() => addToCart(product, stepper)}
-        >
-          Add to Cart
-        </button>
       </div>
     </div>
   );

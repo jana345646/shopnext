@@ -8,7 +8,7 @@ import OfflineBanner from "@/components/OfflineBanner";
 import EmptyState from "@/components/EmptyState";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import Error from "next/error";
-import Link from "next/link";
+
 export default function ProductsClient() {
   const context = useContext(ProductsContext);
 
@@ -17,7 +17,7 @@ export default function ProductsClient() {
   const { filteredProducts, offline, products, error } = context;
 
   if (error) {
-    return <Error />;
+    return <Error statusCode={500} />;
   }
 
   return (
@@ -26,18 +26,13 @@ export default function ProductsClient() {
       <Sorting />
 
       <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 items-start justify-center">
-        {/* الحالة الأولى: لو البيانات لسه بتحمل أو مش موجودة خالص، بنعرض الـ Skeleton */}
         {!products || products.length === 0 ? (
           [...Array(8)].map((_, key) => <ProductSkeleton key={key} />)
         ) : filteredProducts && filteredProducts.length > 0 ? (
-          // الحالة الثانية: لو فيه منتجات بعد الفلترة، بنعمل لها map
           filteredProducts.map((product) => (
-            <Link key={product.id} href={`/products/${product.id}`}>
-              <ProductCard product={product} />
-            </Link>
+            <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          // الحالة الثالثة: لو الـ array فاضية ومفيش منتجات مطابقة
           <EmptyState />
         )}
       </div>
