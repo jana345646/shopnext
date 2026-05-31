@@ -12,6 +12,9 @@ export type ProductsContextType = {
   setOffline: React.Dispatch<React.SetStateAction<boolean>>;
   selectedCategory: string;
   setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
+  error: string | null;
+  SetError: React.Dispatch<React.SetStateAction<string | null>>;
+  retryFetch: () => void;
 };
 
 export const ProductsContext = createContext<ProductsContextType>({
@@ -25,6 +28,9 @@ export const ProductsContext = createContext<ProductsContextType>({
   setOffline: () => {},
   selectedCategory: "",
   setSelectedCategory: () => {},
+  error: null,
+  SetError: () => {},
+  retryFetch: () => {},
 });
 
 //ProductsContext this is the name of the context

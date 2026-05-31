@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { CategoryContext } from "./CategoriesContext";
 import { Category } from "@/types";
+import { fetchCategories } from "@/app/lib/api";
 
 export default function CategoriesProvider({
   children,
@@ -11,31 +12,29 @@ export default function CategoriesProvider({
   children: React.ReactNode;
   initialCategories: Category[];
 }) {
-  const [category, SetCategory] = useState<Category[]>(initialCategories);
+  const [category, SetCategory] = useState<Category[]>([]);
   const [error, SetError] = useState<string | null>(null);
 
-  const getCategories = async () => {
-    try {
-      const res = await fetch("https://fakestoreapi.com/products/categories");
-
-      if (!res.ok) throw new Error();
-
-      const data = await res.json();
-      SetCategory(data);
-    } catch (err) {
-      console.error(err);
-      SetError("failed");
-    }
-  };
-
   useEffect(() => {
+    async function Categories() {
+      try {
+        const data = await fetchCategories();
+
+        SetCategory(data);
+      } catch (err) {
+        console.error(err);
+        SetError("failed");
+      }
+    }
+
     if (initialCategories.length === 0) {
-      getCategories();
+      Categories();
     }
   }, [initialCategories]);
-
   return (
-    <CategoryContext.Provider value={{ category, SetCategory, error }}>
+    <CategoryContext.Provider
+      value={{ category, SetCategory, error, SetError }}
+    >
       {children}
     </CategoryContext.Provider>
   );

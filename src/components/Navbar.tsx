@@ -12,7 +12,7 @@ function Navbar() {
   const cartData = useContext(CartContext);
   const productData = useContext(ProductContext);
 
-  if (!productsData || !categoriesData || !CartContext) return null;
+  if (!productsData || !categoriesData || !cartData) return null;
 
   const { setSelectedCategory, selectedCategory } = productsData;
   const { category, error } = categoriesData;
@@ -45,10 +45,10 @@ function Navbar() {
             {category?.map((cat) => (
               <button
                 className="rounded-[0.3rem] font-bold p-2 text-white"
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
+                key={cat as unknown as string}
+                onClick={() => setSelectedCategory(cat as unknown as string)}
               >
-                {cat}
+                {cat as unknown as string}
               </button>
             ))}
 
