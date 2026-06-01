@@ -1,0 +1,19 @@
+1) home page:
+
+1. feat/home-page : feat is an abbreviation for feature (we use it in fork to show that this is a new feature in the project)
+
+2.lib folder : lib is an abbreviation for library (we put in this folder the functions that will be used in the project multiple times , so it will be easy when we want to edit on it , no repeated code)
+
+3.try and catch: we use them to can control the procees and if an error happened we can control it by them
+
+4.(!res.ok): this will be executed if the condition is true only , it equals res.ok === ...
+
+5.res.json: it extracts the actual data from the object response (status code , ...) and converts it into a js object or array
+
+6.throw new Error: throw creates an Object named Error nd it message is "....." , so ww create by it a manual error as whten it reaches it the code of the try will stop and the catch will be executed
+
+7.catch: it take the error object and displays an error message and the error we write it or any other error
+
+8.interface: we use more with the objects or api responser or props (it extends)
+
+9.type: we use it with the union types (string | number "this or this") , can also be used with objects

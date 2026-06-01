@@ -13,4 +13,7 @@ const nextConfig: NextConfig = {
   },
 };
 
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
 export default nextConfig;

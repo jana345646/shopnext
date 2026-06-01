@@ -1,25 +1,24 @@
 "use client";
 
 import { Product } from "@/types";
-import Image from "next/image";
+import Image from "next/image"; // this is a component in next that make the image to be lazy loading(will be displayed when we reach it in the page) ,responsive , image optimization
 import Link from "next/link";
 import { IoCartOutline } from "react-icons/io5";
 import RatingStars from "./RatingStars";
 import FavoriteButton from "./FavoriteButton";
 
 export default function ProductCard({ product }: { product: Product }) {
-  if (!product) return null;
-
+  if (!product) return null; // if the product wasn not exist react will not run the component and will return null to avoid crashing the project
   return (
     <Link href={`/products/${product.id}`} className="w-full">
-      <div className="w-full mx-auto flex flex-col items-center px-2 pb-4 bg-white rounded-md pt-4 hover:shadow-md transition">
+      <div className="w-full mx-auto flex flex-col items-center px-2 py-4 bg-white rounded-md hover:shadow-lg">
         <div className="relative w-[50%] aspect-square">
           <Image
-            src={product.image || "/fallback-placeholder.png"}
-            alt={product.title || "Product"}
+            src={product.image}
+            alt={product.title}
             fill
-            className="object-contain"
-            unoptimized
+            className="object-contain" // it dispaly the whole image without any cuts , aspect-square it makes the div a square shape (w = h)
+            unoptimized // stops the Image component features
           />
         </div>
 
@@ -29,7 +28,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
 
-        <RatingStars rate={product?.rating?.rate ?? 0} />
+        <RatingStars rate={product.rating.rate} />
 
         <div className="w-full flex justify-between items-center px-1 mt-2">
           <span>${product.price}</span>
@@ -43,3 +42,4 @@ export default function ProductCard({ product }: { product: Product }) {
     </Link>
   );
 }
+//line-clamp: to make the text take only 2 lines then .....

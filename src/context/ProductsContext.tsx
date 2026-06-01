@@ -3,7 +3,7 @@ import { createContext } from "react"; // this is a function that creates a cont
 
 export type ProductsContextType = {
   products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>; //this is a setter (function changes the state) and the data that will be sent to it must be an array of Products
   filteredProducts: Product[];
   setFilteredProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   sortType: "asc" | "desc";
@@ -34,5 +34,4 @@ export const ProductsContext = createContext<ProductsContextType>({
 });
 
 //ProductsContext this is the name of the context
-// type of the context could be ProductsContextType or null , but inially it is null
 // the last line when it creates the context it automatically create with it a provider for this context

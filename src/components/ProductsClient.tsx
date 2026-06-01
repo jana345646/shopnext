@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ProductsContext } from "@/context/ProductsContext";
 import ProductCard from "@/components/ProductCard";
 import Sorting from "@/components/Sorting";
@@ -9,12 +9,22 @@ import EmptyState from "@/components/EmptyState";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import Error from "next/error";
 
-export default function ProductsClient() {
-  const context = useContext(ProductsContext);
+interface ProductsClientProps {
+  categoryData: string;
+}
 
-  if (!context) return null;
+export default function ProductsClient({ categoryData }: ProductsClientProps) {
+  const productscontext = useContext(ProductsContext);
 
-  const { filteredProducts, offline, products, error } = context;
+  useEffect(() => {
+    if (productscontext) {
+      productscontext.setSelectedCategory(categoryData);
+    }
+  }, [categoryData, productscontext]);
+
+  if (!productscontext) return null;
+
+  const { filteredProducts, offline, products, error } = productscontext;
 
   if (error) {
     return <Error statusCode={500} />;
@@ -28,10 +38,12 @@ export default function ProductsClient() {
       <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 items-start justify-center">
         {!products || products.length === 0 ? (
           [...Array(8)].map((_, key) => <ProductSkeleton key={key} />)
-        ) : filteredProducts && filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))
+        ) : filteredProducts?.length > 0 ? (
+          filteredProducts
+            .filter((product) => product && product.id)
+            .map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))
         ) : (
           <EmptyState />
         )}

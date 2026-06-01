@@ -1,119 +1,13 @@
-// "use client";
-
-// import { useEffect, useState } from "react";
-// import { Product } from "@/types";
-// import { ProductsContext } from "./ProductsContext";
-
-// export default function ProductsProvider({
-//   children,
-//   initialProducts = [],
-// }: {
-//   children: React.ReactNode;
-//   initialProducts: Product[];
-// }) {
-//   const [products, setProducts] = useState<Product[]>(initialProducts);
-//   const [filteredProducts, setFilteredProducts] =
-//     useState<Product[]>(initialProducts);
-//   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
-//   const [selectedCategory, setSelectedCategory] = useState<string>("");
-//   const [offline, setOffline] = useState(false);
-//   const [error, SetError] = useState<string | null>(null);
-
-//   const fetchProductsClientSide = async () => {
-//     try {
-//       SetError(null);
-
-//       const res = await fetch("https://fakestoreapi.com/products");
-
-//       if (!res.ok) throw new Error("Failed to fetch products");
-
-//       const data: Product[] = await res.json();
-//       console.log("fetched from client");
-
-//       setProducts(data);
-//       setFilteredProducts(data);
-//     } catch (error) {
-//       const err = error as Error;
-//       SetError(error.message || "Something went wrong");
-//     }
-//   };
-//   const retryFetch = () => {
-//     fetchProductsClientSide();
-//   };
-
-//   // eslint-disable-next-line react-hooks/set-state-in-effect
-//   useEffect(() => {
-//     if (initialProducts.length > 0) {
-//       setProducts(initialProducts);
-//       setFilteredProducts(initialProducts);
-//     } else if (products.length === 0) {
-//       fetchProductsClientSide();
-//     }
-//   }, [initialProducts]);
-
-//   useEffect(() => {
-//     const handleOffline = () => setOffline(true);
-//     const handleOnline = () => setOffline(false);
-//     window.addEventListener("offline", handleOffline);
-//     window.addEventListener("online", handleOnline);
-//     return () => {
-//       window.removeEventListener("offline", handleOffline);
-//       window.removeEventListener("online", handleOnline);
-//     };
-//   }, []);
-
-//   useEffect(() => {
-//     if (!products || products.length === 0) return;
-
-//     let result = [...products];
-
-//     if (selectedCategory && selectedCategory !== "") {
-//       result = result.filter(
-//         (product) => product.category === selectedCategory,
-//       );
-//     }
-
-//     if (sortType === "asc") {
-//       result.sort((a, b) => a.price - b.price);
-//     } else if (sortType === "desc") {
-//       result.sort((a, b) => b.price - a.price);
-//     }
-
-//     setFilteredProducts(result);
-//   }, [products, selectedCategory, sortType]);
-
-//   return (
-//     <ProductsContext.Provider
-//       value={{
-//         products,
-//         setProducts,
-//         filteredProducts,
-//         setFilteredProducts,
-//         sortType,
-//         setSortType,
-//         offline,
-//         setOffline,
-//         selectedCategory,
-//         setSelectedCategory,
-//         error,
-//         SetError,
-//         retryFetch,
-//       }}
-//     >
-//       {children}
-//     </ProductsContext.Provider>
-//   );
-// }
-
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import { Product } from "@/types";
 import { ProductsContext } from "./ProductsContext";
-import { fetchProducts } from "@/app/lib/api";
+import { fetchProducts } from "@/lib/api";
 
 export default function ProductsProvider({
-  children,
+  //layout.tsx automatically send the children here (children is the current page that is opened in the site) , and any children here can use this provider to reach the data from the context
+  children, //ProductsProvider({children: <Page />}) react send it as an object so we detruct it here
 }: {
   children: React.ReactNode;
 }) {
@@ -123,8 +17,8 @@ export default function ProductsProvider({
   const [offline, setOffline] = useState(false);
   const [error, SetError] = useState<string | null>(null);
 
-  // ✅ Fetch products from API
   useEffect(() => {
+    // ueseEffect dont take an async function directly so we used ()=>{}
     async function Products() {
       try {
         SetError(null);
@@ -140,7 +34,6 @@ export default function ProductsProvider({
     Products();
   }, []);
 
-  // ✅ Retry fetch
   const retryFetch = async () => {
     try {
       SetError(null);
@@ -153,7 +46,6 @@ export default function ProductsProvider({
     }
   };
 
-  // ✅ Offline / Online listener
   useEffect(() => {
     const handleOffline = () => setOffline(true);
     const handleOnline = () => setOffline(false);
@@ -167,7 +59,6 @@ export default function ProductsProvider({
     };
   }, []);
 
-  // ✅ Filter + Sort (clean + optimized)
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -189,6 +80,7 @@ export default function ProductsProvider({
   return (
     <ProductsContext.Provider
       value={{
+        // first {to can write js in the jsx} , second {to create an object}
         products,
         setProducts,
         filteredProducts,

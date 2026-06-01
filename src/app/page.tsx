@@ -1,21 +1,19 @@
 import ProductsProvider from "@/context/ProductsProvider";
 import ProductsClient from "@/components/ProductsClient";
-import Navbar from "@/components/Navbar";
-import { Product } from "@/types";
-import { Metadata } from "next"; // this is a type in next
-import { fetchProducts } from "./lib/api";
+import { Metadata } from "next";
+import { fetchProducts } from "../lib/api";
 
 export const metadata: Metadata = {
   title: "Products",
   description: "Browse all products",
 };
 
-export default async function Products() {
-  const ProductsData = await fetchProducts();
+interface PageProps {
+  searchParams: Promise<{ category?: string }>;
+}
 
-  return (
-    <ProductsProvider productsData={ProductsData}>
-      <ProductsClient />
-    </ProductsProvider>
-  );
+export default async function Products({ searchParams }: PageProps) {
+  const { category } = await searchParams;
+
+  return <ProductsClient categoryData={category || ""} />;
 }

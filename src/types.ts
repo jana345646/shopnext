@@ -7,7 +7,7 @@ export interface Product {
   image: string;
   rating: {
     rate: number; // average rating of the product
-    count: number; // number of persons who rate the product
+    count: number; // number of persons who viewd the product
   };
 }
 
