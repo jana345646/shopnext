@@ -1,7 +1,5 @@
-import ProductsProvider from "@/context/ProductsProvider";
 import ProductsClient from "@/components/ProductsClient";
 import { Metadata } from "next";
-import { fetchProducts } from "../lib/api";
 
 export const metadata: Metadata = {
   title: "Products",

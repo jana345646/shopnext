@@ -2,17 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { CategoryContext } from "./CategoriesContext";
-import { Category } from "@/types";
 import { fetchCategories } from "@/lib/api";
 export default function CategoriesProvider({
   children,
   initialCategories = [],
 }: {
   children: React.ReactNode;
-  initialCategories: Category[];
+  initialCategories?: string[];
 }) {
   // 1️⃣ حطينا الـ initialCategories كـ قيمة مبدئية للـ State علطول عشان لو جاية من السيرفر جاهزة
-  const [category, SetCategory] = useState<Category[]>(initialCategories);
+  const [category, SetCategory] = useState<string[]>(initialCategories);
   const [error, SetError] = useState<string | null>(null);
 
   useEffect(() => {

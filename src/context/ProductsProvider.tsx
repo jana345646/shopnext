@@ -6,34 +6,33 @@ import { ProductsContext } from "./ProductsContext";
 import { fetchProducts } from "@/lib/api";
 
 export default function ProductsProvider({
-  //layout.tsx automatically send the children here (children is the current page that is opened in the site) , and any children here can use this provider to reach the data from the context
-  children, //ProductsProvider({children: <Page />}) react send it as an object so we detruct it here
+  children,
+  initialProducts = [],
 }: {
   children: React.ReactNode;
+  initialProducts?: Product[];
 }) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [offline, setOffline] = useState(false);
   const [error, SetError] = useState<string | null>(null);
 
   useEffect(() => {
-    // ueseEffect dont take an async function directly so we used ()=>{}
-    async function Products() {
+    if (initialProducts.length > 0) return;
+
+    async function loadProducts() {
       try {
         SetError(null);
-        // throw new Error("Test Error");
-
         const data = await fetchProducts();
-
         setProducts(data);
-      } catch (error) {
+      } catch {
         SetError("Something went wrong");
       }
     }
 
-    Products();
-  }, []);
+    loadProducts();
+  }, [initialProducts.length]);
 
   const retryFetch = async () => {
     try {

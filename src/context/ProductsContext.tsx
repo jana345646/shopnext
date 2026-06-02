@@ -21,16 +21,16 @@ export const ProductsContext = createContext<ProductsContextType>({
   products: [],
   filteredProducts: [],
   sortType: "asc",
-  setSortType: () => {},
-  setProducts: () => {},
-  setFilteredProducts: () => {},
+  setSortType: () => { },
+  setProducts: () => { },
+  setFilteredProducts: () => { },
   offline: false,
-  setOffline: () => {},
+  setOffline: () => { },
   selectedCategory: "",
-  setSelectedCategory: () => {},
+  setSelectedCategory: () => { },
   error: null,
-  SetError: () => {},
-  retryFetch: () => {},
+  SetError: () => { },
+  retryFetch: () => { },
 });
 
 //ProductsContext this is the name of the context

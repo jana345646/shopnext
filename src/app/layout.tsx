@@ -1,9 +1,3 @@
-// // layout.tsx file is a wrapper that all the pages run inside it and we put in it the components that will be displayes in all the pages
-
-//className={inter.className} we apply this font on the body , classname is a property in the inter object to apply the font class to the body
-//we are using the provider
-
-// layout.tsx file is a wrapper that all the pages run inside it and we put in it the components that will be displayes in all the pages
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
@@ -12,6 +6,8 @@ import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
 import CartProvider from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
+import { fetchCategories, fetchProducts } from "@/lib/api";
+import { Product } from "@/types";
 
 export const metadata = {
   title: "ShopNext",
@@ -23,16 +19,28 @@ const inter = Inter({
   weight: ["400", "700", "500"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let categories: string[] = [];
+  let products: Product[] = [];
+
+  try {
+    [categories, products] = await Promise.all([
+      fetchCategories(),
+      fetchProducts(),
+    ]);
+  } catch (error) {
+    console.error("Root layout fetch failed:", error);
+  }
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CategoriesProvider>
-          <ProductsProvider>
+        <CategoriesProvider initialCategories={categories}>
+          <ProductsProvider initialProducts={products}>
             <CartProvider>
               <FavoriteProvider>
                 <Navbar />
