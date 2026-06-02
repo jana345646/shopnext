@@ -1,16 +1,16 @@
 import { createContext } from "react";
 import { Category } from "@/types";
 
-type CategoryContextType = {
-  category: Category;
-  SetCategory: React.Dispatch<React.SetStateAction<Category>>;
-  error: boolean;
-  SetError: React.Dispatch<React.SetStateAction<boolean>>;
+export type CategoryContextType = {
+  category: Category[];
+  SetCategory: React.Dispatch<React.SetStateAction<Category[]>>;
+  error: string | null;
+  SetError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export const CategoryContext = createContext<CategoryContextType>({
   category: [],
   SetCategory: () => {},
-  error: false,
+  error: null,
   SetError: () => {},
 });

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FavoriteContext, FvoriteContext } from "./FavoriteContext";
+import { FavoriteContext } from "./FavoriteContext"; // تأكد من وجود حرف الـ a
 import { Product } from "@/types";
 
 function FavoriteProvider({ children }: { children: React.ReactNode }) {
