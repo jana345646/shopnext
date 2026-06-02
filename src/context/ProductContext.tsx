@@ -6,6 +6,8 @@ export type ProductContextType = {
   SetProduct: React.Dispatch<React.SetStateAction<number>>;
   stepper: number;
   SetStepper: React.Dispatch<React.SetStateAction<number>>;
+  notFound: boolean;
+  setNotFound: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const ProductContext = createContext<ProductContextType>({
@@ -13,4 +15,6 @@ export const ProductContext = createContext<ProductContextType>({
   SetProduct: () => {},
   stepper: 1,
   SetStepper: () => {},
+  notFound: false,
+  setNotFound: () => {},
 });

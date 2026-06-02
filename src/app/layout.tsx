@@ -10,10 +10,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
-import { Metadata } from "next";
 import CartProvider from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
-import { fetchCategories, fetchProducts } from "../lib/api";
 
 export const metadata = {
   title: "ShopNext",
@@ -25,18 +23,15 @@ const inter = Inter({
   weight: ["400", "700", "500"],
 });
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const categoriesData = await fetchCategories();
-  const productsData = await fetchProducts();
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CategoriesProvider Categories={categoriesData}>
+        <CategoriesProvider>
           <ProductsProvider>
             <CartProvider>
               <FavoriteProvider>
@@ -46,7 +41,6 @@ export default async function RootLayout({
             </CartProvider>
           </ProductsProvider>
         </CategoriesProvider>
-
         <Footer />
       </body>
     </html>

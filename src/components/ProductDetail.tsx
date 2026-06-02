@@ -163,7 +163,10 @@ function ProductDetail() {
                 <FiMinus />
               </button>
               <span>{stepper}</span>
-              <button onClick={() => SetStepper((p) => p + 1)}>
+              <button
+                onClick={() => SetStepper((p) => p + 1)}
+                disabled={stepper === 99}
+              >
                 <FiPlus />
               </button>
             </div>

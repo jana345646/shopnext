@@ -6,47 +6,44 @@ export async function fetchProducts() {
 
     if (!res.ok) throw new Error("Failed to fetch products");
 
-    const data: Product[] = await res.json();
-
-    return data;
+    return await res.json();
   } catch (err) {
-    console.error("error fetching product:", err);
-    return [];
+    console.error("error fetching products:", err);
+    throw new Error("Something went wrong");
   }
 }
-
 export async function fetchCategories() {
   try {
     const res = await fetch("https://fakestoreapi.com/products/categories", {
       cache: "no-store",
     });
 
-    if (!res.ok) return [];
+    if (!res.ok) throw new Error("Failed to fetch categories");
 
-    const data = await res.json();
-
-    return data;
+    return await res.json();
   } catch (error) {
     console.error("Categories Fetch Error:", error);
-
-    return [];
+    throw new Error("Something went wrong");
   }
 }
 
 export async function fetchProduct(id: string | number) {
   const productId = Number(id);
-  if (isNaN(productId)) return null;
+
+  if (isNaN(productId)) {
+    throw new Error("Invalid product id");
+  }
 
   try {
     const res = await fetch(`https://fakestoreapi.com/products/${productId}`, {
       cache: "no-store",
     });
-    if (!res.ok) return null;
 
-    const data = await res.json();
-    return data ?? null;
-  } catch (err: any) {
-    console.error("fetch failed:", err.message);
-    return null;
+    if (!res.ok) throw new Error("Product not found");
+
+    return await res.json();
+  } catch (err) {
+    console.error("fetch failed:", err);
+    throw new Error("Something went wrong");
   }
 }

@@ -22,6 +22,7 @@ export default function ProductsProvider({
     async function Products() {
       try {
         SetError(null);
+        // throw new Error("Test Error");
 
         const data = await fetchProducts();
 

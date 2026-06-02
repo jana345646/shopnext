@@ -28,7 +28,7 @@
 
 import ProductProvider from "@/context/ProductProvider";
 import ProductDetail from "@/components/ProductDetail";
-
+import NotFound from "@/components/NotFound";
 interface PageProps {
   params: Promise<{ id: string }>;
 }
