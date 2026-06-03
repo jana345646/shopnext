@@ -5,6 +5,7 @@ import { CategoryContext } from "@/context/CategoriesContext";
 import { IoCartOutline } from "react-icons/io5";
 import CartContext from "@/context/CartContext";
 import { ProductContext } from "@/context/ProductContext";
+import Link from "next/link";
 
 function Navbar() {
   const productsData = useContext(ProductsContext);
@@ -25,7 +26,7 @@ function Navbar() {
   }, 0); // the initial value is zero
 
   return (
-    <div className="w-full bg-[#1E1E1E] flex justify-between px-[5rem] py-4 items-center">
+    <div className="w-full bg-[#1E1E1E] flex justify-between px-[2rem] py-4 items-center">
       <div className="flex flex-col">
         <p className="text-white font-bold text-2xl">
           <span className="text-yellow-500">S</span>hopNext
@@ -51,6 +52,13 @@ function Navbar() {
                 {cat as unknown as string}
               </button>
             ))}
+
+            <Link
+              href="/login"
+              className="rounded-[0.3rem] font-bold p-2 text-white"
+            >
+              LogIn
+            </Link>
 
             <div className=" flex relative pt-3">
               <IoCartOutline className="text-2xl text-white" />
