@@ -12,7 +12,7 @@ import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
 import CartProvider from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
-
+import LoginProvider from "@/context/loginProvider";
 export const metadata = {
   title: "ShopNext",
   description: "Online shopping app",
@@ -31,16 +31,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CategoriesProvider>
-          <ProductsProvider>
-            <CartProvider>
-              <FavoriteProvider>
-                <Navbar />
-                <main>{children}</main>
-              </FavoriteProvider>
-            </CartProvider>
-          </ProductsProvider>
-        </CategoriesProvider>
+        <LoginProvider>
+          <CategoriesProvider>
+            <ProductsProvider>
+              <CartProvider>
+                <FavoriteProvider>
+                  <Navbar />
+                  <main>{children}</main>
+                </FavoriteProvider>
+              </CartProvider>
+            </ProductsProvider>
+          </CategoriesProvider>
+        </LoginProvider>
         <Footer />
       </body>
     </html>

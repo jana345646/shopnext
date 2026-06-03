@@ -17,3 +17,13 @@
 8.interface: we use more with the objects or api responser or props (it extends)
 
 9.type: we use it with the union types (string | number "this or this") , can also be used with objects
+
+3) login page:
+
+1. login page has a route due to that we create it inside the app folder
+
+2.we use client side validation to less the api requests and to make this more easier for the ux and better in the performance , but with it we must use the 
+server side validation as it is the main security of the site
+
+3.token flow : token is a card that tell the server that this user has logged in before , so at the first login we sent the username and the password to the server then the server makes some validtaion on it(backend validation) then send a token , so when the user enters the site again ge will not need to reassign the email and the password , 
+ we only send the token in the request then server checks if they are the same then the user enters normally
