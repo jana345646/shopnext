@@ -89,7 +89,7 @@ export default function LogIn() {
     <div className="w-full flex ">
       <div className="relative w-[60%] h-[85vh]">
         <Image
-          src="/shopping.svg"
+          src="/shoppingyellow2.png"
           alt="shopping image"
           fill
           className="object-contain" // don't cut the image
@@ -117,7 +117,7 @@ export default function LogIn() {
             />
 
             {usernameError && (
-              <p className="text-red-500 text-sm mt-1 w-[80%]">
+              <p className="text-red-500 text-sm mt-1 w-[80%] ">
                 {usernameError}
               </p>
             )}
@@ -163,7 +163,7 @@ export default function LogIn() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#1E1E1E] text-white p-2 text-lg font-bold w-[50%] rounded-[2rem] mt-5 disabled:opacity-70"
+              className="bg-[#1E1E1E] text-white p-2 text-lg font-bold w-[50%] rounded-[2rem] mt-5 disabled:opacity-70 flex justify-center items-center"
             >
               {loading ? (
                 <FaSpinner className="animate-spin text-xl" />

@@ -57,26 +57,25 @@ function Navbar() {
             ))}
 
             {!user ? (
-              <Link
-                href="/login"
-                className="rounded-[0.3rem] font-bold p-2 text-white"
-              >
+              <Link href="/login" className=" font-bold p-3 text-white">
                 Login
               </Link>
             ) : (
               <>
-                <span className=" font-bold p-2 text-white">{user}</span>
-                <button onClick={logout}>Logout</button>
+                <span className=" font-bold p-3 text-white">{user}</span>
+                <button className="font-bold" onClick={logout}>
+                  Logout
+                </button>
               </>
             )}
 
-            <div className=" flex relative pt-3">
+            <div className=" flex relative pt-2">
               <Link
                 href="/cart"
                 className="rounded-[0.3rem] font-bold p-2 text-white"
               >
                 <IoCartOutline className="text-2xl text-white" />
-                <span className="absolute -top-4 -right-1 rounded-full px-2 text-sm text-white pt-3">
+                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
                   {cartCount}
                 </span>
               </Link>
