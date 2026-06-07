@@ -18,4 +18,4 @@ export type CartItem = {
   quantity: number;
 };
 
-export type token = string;
+export type Token = string; // token comes from the api as a string

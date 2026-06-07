@@ -27,3 +27,9 @@ server side validation as it is the main security of the site
 
 3.token flow : token is a card that tell the server that this user has logged in before , so at the first login we sent the username and the password to the server then the server makes some validtaion on it(backend validation) then send a token , so when the user enters the site again ge will not need to reassign the email and the password , 
  we only send the token in the request then server checks if they are the same then the user enters normally
+
+ 4.authentication: it is the process of checking if the user is the same user or not to make him access some pages in the website(cart , ...)
+
+ 5.Link: we use it to navigate directly between the pages without waiting for a specific logic
+
+ 6.userouter: we use it to navigate between the pages according to a specific logic
