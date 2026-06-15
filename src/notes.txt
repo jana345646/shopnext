@@ -33,3 +33,15 @@ server side validation as it is the main security of the site
  5.Link: we use it to navigate directly between the pages without waiting for a specific logic
 
  6.userouter: we use it to navigate between the pages according to a specific logic
+
+ 4) cart page: 
+
+ 1. the cart page don't have an api , this means that when the user add item or , make any action it will be edited in the client side only no server side
+
+ 2.useState: we use it to manage the states , with primitive data types and small objects , and states that it's change don't depends on other values
+
+ 3.usereducer: we use it to manage the states , which has complex and multiple actions , and it's change depends on other values
+
+ 4. items-center: we can use it with grid (it will move in the same direction) , but with flex (itn will move reverse the direction)
+
+ 5.drawer: it is a side bar that is opened from the side of the current page without going to another page

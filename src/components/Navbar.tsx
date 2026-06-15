@@ -3,27 +3,26 @@ import { useContext } from "react";
 import { ProductsContext } from "@/context/ProductsContext";
 import { CategoryContext } from "@/context/CategoriesContext";
 import { IoCartOutline } from "react-icons/io5";
-import CartContext from "@/context/CartContext";
-import { ProductContext } from "@/context/ProductContext";
+import { CartContext } from "@/context/CartContext";
 import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
+import CartDrawer from "./CartDrawer";
 
 function Navbar() {
   const productsData = useContext(ProductsContext);
   const categoriesData = useContext(CategoryContext);
   const cartData = useContext(CartContext);
-  const productData = useContext(ProductContext);
   const authData = useContext(AuthContext);
 
   if (!productsData || !categoriesData || !cartData || !authData) return null;
 
-  const { setSelectedCategory, selectedCategory } = productsData;
+  const { setSelectedCategory } = productsData;
   const { category, error } = categoriesData;
-  const { cart, addToCart } = cartData;
-  const { product } = productData;
+  const { cart, mounted, setIsCartOpen } = cartData;
   const { user, logout } = authData;
 
   const cartCount = cart.reduce((total, item) => {
+    // this code is not stored in local storage it is done by every render
     // reduce it loops on the array to return only one value
     return total + item.quantity;
   }, 0); // the initial value is zero
@@ -70,15 +69,16 @@ function Navbar() {
             )}
 
             <div className=" flex relative pt-2">
-              <Link
-                href="/cart"
+              <button
+                onClick={() => setIsCartOpen(true)}
                 className="rounded-[0.3rem] font-bold p-2 text-white"
               >
                 <IoCartOutline className="text-2xl text-white" />
                 <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
-                  {cartCount}
+                  {mounted ? cartCount : 0}
                 </span>
-              </Link>
+              </button>
+              <CartDrawer />
             </div>
           </div>
         )}

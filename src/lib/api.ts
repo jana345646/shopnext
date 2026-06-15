@@ -60,7 +60,7 @@ export async function fetchToken(username: string, password: string) {
         "Content-Type": "application/json", //contect type this is the type of the data we sent it , json(it's a way to write the data in a form the broswer and the server can uderstand it ({"key":value}, ....))
       },
       body: JSON.stringify({
-        // body contains the actual data that we will send in the request , json.stringfy to convert the object into json
+        // body contains the actual data that we will send in the request , json.stringfy to convert the object into string
 
         username,
         password,

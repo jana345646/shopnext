@@ -10,9 +10,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
-import CartProvider from "@/context/CartProvider";
+import { CartProvider } from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
+import { Toaster } from "react-hot-toast";
+
 export const metadata = {
   title: "ShopNext",
   description: "Online shopping app",
@@ -31,18 +33,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
-          <CategoriesProvider>
-            <ProductsProvider>
-              <CartProvider>
+        <CartProvider>
+          <AuthProvider>
+            <CategoriesProvider>
+              <ProductsProvider>
                 <FavoriteProvider>
                   <Navbar />
+                  <Toaster />
                   <main>{children}</main>
                 </FavoriteProvider>
-              </CartProvider>
-            </ProductsProvider>
-          </CategoriesProvider>
-        </AuthProvider>
+              </ProductsProvider>
+            </CategoriesProvider>
+          </AuthProvider>
+        </CartProvider>
         <Footer />
       </body>
     </html>
