@@ -9,20 +9,21 @@ import RatingStars from "./RatingStars";
 import FavoriteButton from "./FavoriteButton";
 import RelatedProducts from "./RelatedProducts";
 import BreadCrumb from "./BreadCrumb";
-
+import { FavoriteContext } from "@/context/FavoriteContext";
 function ProductDetail() {
   const productData = useContext(ProductContext);
   const cartData = useContext(CartContext);
+  const favoriteData = useContext(FavoriteContext);
 
-  if (!productData || !cartData) return null;
+  if (!productData || !cartData || !favoriteData) return null;
 
   const { product, stepper, SetStepper } = productData;
-  const { dispatch } = cartData;
+  const { dispatch: cartDispatch } = cartData;
 
   if (!product) return null;
 
   function addToCart() {
-    dispatch({
+    cartDispatch({
       type: "ADD_ITEM",
       payload: {
         id: product.id,

@@ -10,16 +10,19 @@ function FavoriteButton({ product }: { product: Product }) {
 
   if (!favoriteData) return null;
 
-  const { favorite, toggleFavorite } = favoriteData;
+  const { favorite, dispatch } = favoriteData;
 
-  const isFavorite = favorite.some((item) => item.id === product.id);
+  const isFavorite = favorite.some((item) => item.id === product.id); // for ui , but in reducer is for the logic
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleFavorite(product);
-  };
 
+    dispatch({
+      type: "TOGGLE_FAVOURITE",
+      payload: product,
+    });
+  };
   return isFavorite ? (
     <FaHeart
       className="text-2xl text-red-600 cursor-pointer"

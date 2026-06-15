@@ -63,6 +63,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("shopnext_token");
     localStorage.removeItem("shopnext_user");
     localStorage.removeItem("shopnext_cart");
+    localStorage.removeItem("shopnext_favourites");
 
     router.push("/login");
   };
