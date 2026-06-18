@@ -44,4 +44,10 @@ server side validation as it is the main security of the site
 
  4. items-center: we can use it with grid (it will move in the same direction) , but with flex (itn will move reverse the direction)
 
- 5.drawer: it is a side bar that is opened from the side of the current page without going to another page
+ 5.drawer: it is a side bar that is opened from the side of the current page without going to another 
+ 
+
+
+ firebase: it provides an authentication backend that icludes autoaic procesess like login , logout , signup , stroes authentication data automatically , checks on email password and send token all automatically 
+ jwt token : it needs to create a manual backend to checks on email password and to send token and to checks on the token
+ firebase da backend gahez mn google

@@ -39,6 +39,7 @@ export interface FavoriteProduct {
   title: string;
   price: number;
   image: string;
+  quantity: number;
 }
 
 export type FavoriteActions =

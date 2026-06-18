@@ -53,13 +53,13 @@ export default function CartPage() {
   return (
     <ProtectedRoute>
       {!storageAvailable && (
-        <div className="text-2xl text-center mt-8 rounded mb-4">
+        <div className="text-2xl h-screen text-center mt-8 rounded mb-4">
           Your cart won't be saved after refresh.
         </div>
       )}
 
       {cart.length === 0 ? (
-        <div className="flex flex-col items-center justify-center  h-[60vh]">
+        <div className="flex flex-col items-center justify-center">
           <h1 className="text-2xl font-bold">Your cart is empty</h1>
           <Link href={"/"}>
             <button className="mt-4 border-2 border-[#F0F0F0] hover:border-[#1E1E1E] px-6 py-2 rounded">
