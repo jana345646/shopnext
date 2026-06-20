@@ -30,7 +30,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // load from localStorage
+
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
@@ -102,6 +103,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Logout Error:", err);
     }
   };
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,5 +140,3 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
-export default AuthProvider;

@@ -20,6 +20,9 @@ import SidebarProvider from "@/context/SidebarProvider";
 
 import { Toaster } from "react-hot-toast";
 
+import Sidebar from "@/components/Sidebar";
+import SidebarProvider from "@/context/SidebarProvider";
+
 export const metadata = {
   title: "ShopNext",
   description: "Online shopping app",

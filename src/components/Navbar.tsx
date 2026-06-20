@@ -25,14 +25,15 @@ function Navbar() {
     !categoriesData ||
     !cartData ||
     !authData ||
-    !favouriteData
+    !favoriteData
   )
     return null;
-
-  const { setSelectedCategory } = productsData;
+  const { setSelectedCategory, selectedCategory } = productsData;
+>>>>>>> aa09f57 (login authentication with firebase)
   const { category, error } = categoriesData;
   const { cart, mounted, setIsCartOpen } = cartData;
   const { user, logout } = authData;
+  const { favorite } = favoriteData;
 
   const { favorite } = favouriteData;
 
@@ -106,6 +107,19 @@ function Navbar() {
                     {mounted ? favorite.length : 0}
                   </span>
                 </button>
+              </Link>
+            </div>
+
+            <div className="flex relative pt-2">
+              <Link
+                href="/favorites"
+                className="rounded-[0.3rem] font-bold p-2 text-white"
+              >
+                <IoHeartOutline className="text-2xl text-white" />
+
+                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
+                  {favoriteCount}
+                </span>
               </Link>
             </div>
           </div>
