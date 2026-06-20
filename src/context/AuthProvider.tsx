@@ -30,7 +30,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Listen to auth changes
+  // load from localStorage
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {

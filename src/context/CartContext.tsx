@@ -1,18 +1,48 @@
-//we create a context for the the cart as if we put it in the product context and edit in the cart value all the components that uses this context wwill render automatically (low performance)
-
 import { createContext } from "react";
-import { Product } from "@/types";
-import { CartItem } from "@/types";
+import { CartProduct, CartActions } from "@/types";
+import { Dispatch } from "react"; // this is a type in react for the function(dispatch) that send the actions to the reducer
+
+export function cartReducer(state: CartProduct[], action: CartActions) {
+  // this is a function(reducer) that is responsible for hnadling the changes in the cart , state(current state of the cart) , action(the data that is sent in the dispatch)
+  //react sends the sate to the reducer automatically when we make a dispatch
+  switch (action.type) {
+    case "ADD_ITEM":
+      const existing = state.find((item) => item.id === action.payload.id);
+
+      if (existing) {
+        return state.map((item) =>
+          item.id === action.payload.id
+            ? {
+                ...item,
+                quantity: item.quantity + action.payload.quantity,
+              }
+            : item,
+        );
+      }
+
+      return [...state, action.payload];
+
+    case "REMOVE_ITEM":
+      return state.filter((item) => item.id !== action.payload.id); //if true keep the item , filter keeps the ture only
+
+    case "UPDATE_QTY":
+      return state.map((item) =>
+        item.id === action.payload.id
+          ? { ...item, quantity: action.payload.quantity } //...item this means take all the items data as it is and change only the quantity
+          : item,
+      );
+
+    case "CLEAR_CART":
+      return [];
+
+    default:
+      return state;
+  }
+}
 
 export type CartContextType = {
-  cart: CartItem[];
-  SetCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-  addToCart: (product: Product, quantity: number) => void; // this is a normal function not a state and it dosent return a value it only make a specfic task so it retrns void
+  cart: CartProduct[];
+  dispatch: Dispatch<CartActions>;
 };
 
-export const CartContext = createContext<CartContextType>({
-  cart: [],
-  SetCart: () => {},
-  addToCart: () => {},
-});
-export default CartContext;
+export const CartContext = createContext<CartContextType | null>(null); //initial value null

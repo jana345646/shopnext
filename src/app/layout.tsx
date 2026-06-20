@@ -6,15 +6,19 @@
 // layout.tsx file is a wrapper that all the pages run inside it and we put in it the components that will be displayes in all the pages
 import "./globals.css";
 import { Inter } from "next/font/google";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Sidebar from "@/components/Sidebar";
+
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
-import CartProvider from "@/context/CartProvider";
+import { CartProvider } from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
-import Sidebar from "@/components/Sidebar";
 import SidebarProvider from "@/context/SidebarProvider";
+
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "ShopNext",
@@ -42,9 +46,10 @@ export default function RootLayout({
                   <SidebarProvider>
                     <Navbar />
                     <Sidebar />
+                    <Toaster />
                     <main>{children}</main>
+                    <Footer />
                   </SidebarProvider>
-                  <Footer />
                 </FavoriteProvider>
               </CartProvider>
             </ProductsProvider>
