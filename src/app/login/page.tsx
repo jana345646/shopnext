@@ -15,9 +15,9 @@ export default function LogIn() {
 
   const {
     login,
-    formUsername,
-    setFormUsername,
-    Password,
+    formEmail,
+    setFormEmail,
+    password, // ✅ تم تعديلها لـ p سمول عشان تطابق الـ Context
     setPassword,
     error,
     setError,
@@ -32,59 +32,47 @@ export default function LogIn() {
   } = authData;
 
   const handleSubmit = async (e: React.FormEvent) => {
-    // e is an event object that holds information about the event
-    e.preventDefault(); // it prevents the page reload after the submit
+    e.preventDefault();
 
     let hasError = false;
 
     setUsernameError("");
     setPasswordError("");
 
-    if (!formUsername) {
-      setUsernameError("Username is required");
+    if (!formEmail) {
+      setUsernameError("Email is required");
       hasError = true;
     }
 
-    if (!Password) {
+    if (!password) {
+      // ✅ سمول
       setPasswordError("Password is required");
       hasError = true;
-    } else if (Password.length < 4) {
+    } else if (password.length < 4) {
+      // ✅ سمول
       setPasswordError("Password must be at least 4 characters");
       hasError = true;
     }
 
     if (hasError) return;
 
-    setLoading(true);
+    try {
+      setLoading(true);
+      setError("");
 
-    const result = await login(formUsername, Password);
+      await login(formEmail, password); // ✅ سمول
 
-    setLoading(false);
+      const searchParams = new URLSearchParams(window.location.search);
+      const next = searchParams.get("next");
 
-    if (result.status === 401) {
-      // staus was sent automatically by the server
-      setError("Invalid username or password.");
-      return;
-    }
-
-    if (result.networkError) {
-      //variable we declared it
-      setError("Login service unavailable. Please try again.");
-      return;
-    }
-
-    // FakeStore API does NOT provide token expiration.
-    // This means the token is always valid unless manually removed
-
-    if (result.data?.token) {
-      const searchParams = new URLSearchParams(window.location.search); // this is a class in js by it we can take the part of the query(after ?) from the url
-      const next = searchParams.get("next"); // get is a method inside URLSearchParams to get a specific part from the url
-
-      router.push(next || "/"); // it will navigate to the next if it exists or to the home page
+      router.push(next || "/");
+    } catch (error) {
+      setError("Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // we used relative to can use fill (so to make the div to be the reference of the image "to be filled according to it")
   return (
     <div className="w-full flex ">
       <div className="relative w-[60%] h-[85vh]">
@@ -92,26 +80,31 @@ export default function LogIn() {
           src="/shoppingyellow2.png"
           alt="shopping image"
           fill
-          className="object-contain" // don't cut the image
-          unoptimized // it stops the Image optimization
+          className="object-contain"
+          unoptimized
         />
       </div>
 
       <div className="w-[40%] flex flex-col gap-[2rem] justify-center">
         <h1 className="text-5xl text-center">User Login</h1>
 
-        <form className="flex flex-col gap-[2rem]" onSubmit={handleSubmit}>
+        {/* ✅ ضفنا autoComplete="off" هنا */}
+        <form
+          className="flex flex-col gap-[2rem]"
+          onSubmit={handleSubmit}
+          autoComplete="off"
+        >
           <div className="flex flex-col gap-1 pl-[3rem]">
-            <label className="text-lg">Username</label>
-
+            <label className="text-lg">Email</label>
             <input
               type="text"
+              autoComplete="none"
               className={`border-b outline-none w-[80%] transition-colors ${
                 usernameError ? "border-red-500" : "border-gray-500"
               }`}
-              value={formUsername}
+              value={formEmail}
               onChange={(e) => {
-                setFormUsername(e.target.value);
+                setFormEmail(e.target.value);
                 setUsernameError("");
               }}
             />
@@ -129,10 +122,11 @@ export default function LogIn() {
             <div className="relative w-[80%]">
               <input
                 type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
                 className={`border-b outline-none w-full pr-8 transition-colors ${
                   passwordError ? "border-red-500" : "border-gray-500"
                 }`}
-                value={Password}
+                value={password} // ✅ سمول
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setPasswordError("");

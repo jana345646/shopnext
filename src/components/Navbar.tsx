@@ -7,6 +7,11 @@ import CartContext from "@/context/CartContext";
 import { ProductContext } from "@/context/ProductContext";
 import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
+import { FavoriteContext } from "@/context/FavoriteContext";
+import { IoHeartOutline } from "react-icons/io5";
+import Sidebar from "@/components/Sidebar";
+import { SidebarContext } from "@/context/SidebarContext";
+import { IoMenu } from "react-icons/io5";
 
 function Navbar() {
   const productsData = useContext(ProductsContext);
@@ -14,19 +19,30 @@ function Navbar() {
   const cartData = useContext(CartContext);
   const productData = useContext(ProductContext);
   const authData = useContext(AuthContext);
+  const favoriteData = useContext(FavoriteContext);
+  const { setOpen } = useContext(SidebarContext);
 
-  if (!productsData || !categoriesData || !cartData || !authData) return null;
-
+  if (
+    !productsData ||
+    !categoriesData ||
+    !cartData ||
+    !authData ||
+    !favoriteData
+  )
+    return null;
   const { setSelectedCategory, selectedCategory } = productsData;
   const { category, error } = categoriesData;
   const { cart, addToCart } = cartData;
   const { product } = productData;
   const { user, logout } = authData;
+  const { favorite } = favoriteData;
 
   const cartCount = cart.reduce((total, item) => {
     // reduce it loops on the array to return only one value
     return total + item.quantity;
   }, 0); // the initial value is zero
+
+  const favoriteCount = favorite.length;
 
   return (
     <div className="w-full bg-[#1E1E1E] flex justify-between px-[2rem] py-4 items-center">
@@ -56,13 +72,16 @@ function Navbar() {
               </button>
             ))}
 
+            <Link href={"/register"}>
+              <button>Sign Up</button>
+            </Link>
+
             {!user ? (
-              <Link href="/login" className=" font-bold p-3 text-white">
+              <Link href="/login" className="font-bold p-3 text-white">
                 Login
               </Link>
             ) : (
               <>
-                <span className=" font-bold p-3 text-white">{user}</span>
                 <button className="font-bold" onClick={logout}>
                   Logout
                 </button>
@@ -80,9 +99,25 @@ function Navbar() {
                 </span>
               </Link>
             </div>
+
+            <div className="flex relative pt-2">
+              <Link
+                href="/favorites"
+                className="rounded-[0.3rem] font-bold p-2 text-white"
+              >
+                <IoHeartOutline className="text-2xl text-white" />
+
+                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
+                  {favoriteCount}
+                </span>
+              </Link>
+            </div>
           </div>
         )}
       </div>
+      <button onClick={() => setOpen(true)} className="text-white text-3xl">
+        <IoMenu />
+      </button>{" "}
     </div>
   );
 }

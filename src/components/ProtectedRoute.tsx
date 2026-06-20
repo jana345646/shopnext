@@ -25,5 +25,5 @@ export default function ProtectedRoute({
 
   if (!token) return null; // to prevent the cart to appear if there is no token
 
-  return chilldren; // to display the children
+  return children; // to display the children
 }

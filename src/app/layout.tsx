@@ -13,6 +13,9 @@ import CategoriesProvider from "@/context/CategoriesProvider";
 import CartProvider from "@/context/CartProvider";
 import FavoriteProvider from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
+import Sidebar from "@/components/Sidebar";
+import SidebarProvider from "@/context/SidebarProvider";
+
 export const metadata = {
   title: "ShopNext",
   description: "Online shopping app",
@@ -36,14 +39,17 @@ export default function RootLayout({
             <ProductsProvider>
               <CartProvider>
                 <FavoriteProvider>
-                  <Navbar />
-                  <main>{children}</main>
+                  <SidebarProvider>
+                    <Navbar />
+                    <Sidebar />
+                    <main>{children}</main>
+                  </SidebarProvider>
+                  <Footer />
                 </FavoriteProvider>
               </CartProvider>
             </ProductsProvider>
           </CategoriesProvider>
         </AuthProvider>
-        <Footer />
       </body>
     </html>
   );

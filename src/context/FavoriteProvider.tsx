@@ -1,43 +1,47 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FavoriteContext } from "./FavoriteContext"; // تأكد من وجود حرف الـ a
+import { FavoriteContext } from "./FavoriteContext";
 import { Product } from "@/types";
 
 function FavoriteProvider({ children }: { children: React.ReactNode }) {
-  const [favorite, SetFavorite] = useState<Product[]>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("favorites");
-      return stored ? JSON.parse(stored) : [];
-    }
-    return [];
-  });
-
-  function toggleFavorite(product: Product) {
-    SetFavorite((prev) => {
-      const exists = prev.some((item) => item.id === product.id); // some loops on the array to know if there is at least one item matches the condition
-
-      if (exists) {
-        return prev.filter((item) => item.id !== product.id); // if they are not the same it will be saved in the prev array
-      }
-
-      return [...prev, product];
-    });
-  }
+  const [favorite, SetFavorite] = useState<Product[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorite));
-  }, [favorite]);
+    const stored = localStorage.getItem("favorites");
+    if (stored) {
+      SetFavorite(JSON.parse(stored));
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated) {
+      localStorage.setItem("favorites", JSON.stringify(favorite));
+    }
+  }, [favorite, hydrated]);
 
   return (
     <FavoriteContext.Provider
       value={{
         favorite,
         SetFavorite,
-        toggleFavorite,
+        toggleFavorite: (product: Product) => {
+          SetFavorite((prev) => {
+            const exists = prev.some((item) => item.id === product.id);
+
+            if (exists) {
+              return prev.filter((item) => item.id !== product.id);
+            }
+
+            return [...prev, product];
+          });
+        },
       }}
     >
       {children}
     </FavoriteContext.Provider>
   );
 }
+
 export default FavoriteProvider;

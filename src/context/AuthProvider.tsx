@@ -2,89 +2,134 @@
 
 import { AuthContext } from "./AuthContext";
 import { useState, useEffect } from "react";
-import { fetchToken } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  User,
+} from "firebase/auth";
+import { auth } from "@/firebase";
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const [token, setToken] = useState("");
+  // 🔐 Auth state
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string>("");
 
-  const [user, setUser] = useState(""); // this holds the user after he logged in
-  const [Password, setPassword] = useState("");
-
-  const [formUsername, setFormUsername] = useState(""); //this holds the username value when he is still writting the value
+  // 🔐 UI states
+  const [formEmail, setFormEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // ✅ Listen to auth changes
   useEffect(() => {
-    const savedToken = localStorage.getItem("shopnext_token");
-    const savedUser = localStorage.getItem("shopnext_user");
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
 
-    if (savedToken) {
-      setToken(savedToken);
-    }
+        const idToken = await firebaseUser.getIdToken();
+        setToken(idToken);
+      } else {
+        setUser(null);
+        setToken("");
+      }
+    });
 
-    if (savedUser) {
-      setUser(savedUser);
-    }
+    return () => unsubscribe();
   }, []);
 
-  const login = async (username: string, password: string) => {
-    const result = await fetchToken(username.trim(), password.trim());
-
-    if (result?.data?.token) {
-      // if there is a token was sent
-      setUser(username);
-      setToken(result.data.token);
-
-      localStorage.setItem("shopnext_token", result.data.token);
-      localStorage.setItem("shopnext_user", username);
+  // ✅ Register
+  const register = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      return result;
+    } finally {
+      setLoading(false);
     }
-
-    return result;
   };
 
-  const logout = () => {
-    setUser("");
-    setToken("");
-
-    setFormUsername("");
-    setPassword("");
-
-    localStorage.removeItem("shopnext_token");
-    localStorage.removeItem("shopnext_user");
-
-    router.push("/login");
+  // ✅ Login
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      return result;
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const logout = async () => {
+    try {
+      // 1️⃣ تسجيل الخروج من Firebase
+      await signOut(auth);
+
+      // 2️⃣ تنظيف بيانات الفورم والأخطاء
+      setFormEmail("");
+      setPassword("");
+      setUsernameError("");
+      setPasswordError("");
+      setError("");
+
+      // 3️⃣ تمسح الـ Cart والـ Favorites من الـ LocalStorage (تأكد من الأسماء اللي مسميها في الـ CartContext)
+      localStorage.removeItem("cart");
+      localStorage.removeItem("favorites");
+      // لو عايز تمسح أي حاجة تانية متسيفة في الكاش، تقدر تستخدم: localStorage.clear();
+
+      console.log("🔥 AFTER SIGNOUT:", auth.currentUser);
+
+      // 4️⃣ توجهه لصفحة الـ login
+      router.replace("/login");
+
+      // 5️⃣ السحر هنا: بيعمل ريفريش كامل للصفحة، فكل الـ Contexts التانية (زي CartContext)
+      // هترجع للـ Initial State (الفاضية) كأن الأبليكيشن لسه بيفتح لأول مرة
+      window.location.reload();
+    } catch (err) {
+      console.error("Logout Error:", err);
+    }
+  };
   return (
     <AuthContext.Provider
       value={{
+        user,
         token,
-        setToken,
+
+        register,
         login,
         logout,
-        user,
-        setUser,
-        formUsername,
-        setFormUsername,
-        Password,
+
+        formEmail,
+        setFormEmail,
+
+        password,
         setPassword,
+
         usernameError,
         setUsernameError,
+
         passwordError,
         setPasswordError,
-        showPassword,
-        setShowPassword,
+
         error,
         setError,
+
+        showPassword,
+        setShowPassword,
+
         loading,
         setLoading,
       }}
