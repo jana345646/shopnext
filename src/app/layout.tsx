@@ -14,7 +14,7 @@ import Sidebar from "@/components/Sidebar";
 import ProductsProvider from "@/context/ProductsProvider";
 import CategoriesProvider from "@/context/CategoriesProvider";
 import { CartProvider } from "@/context/CartProvider";
-import FavoriteProvider from "@/context/FavoriteProvider";
+import { FavoriteProvider } from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
 import SidebarProvider from "@/context/SidebarProvider";
 

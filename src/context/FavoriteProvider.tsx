@@ -1,25 +1,36 @@
 "use client";
-import { useState, useEffect } from "react";
+
 import { FavoriteContext } from "./FavoriteContext";
-import { Product } from "@/types";
+import { favoriteReducer } from "./FavouritesContext";
+import { useReducer, useEffect, useState } from "react";
 
-function FavoriteProvider({ children }: { children: React.ReactNode }) {
-  const [favorite, SetFavorite] = useState<Product[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+const getInitialFavorites = () => {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const stored = localStorage.getItem("shopnext_favourites");
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.error("Failed to parse favourites from localStorage", error);
+    return [];
+  }
+};
+
+export function FavoriteProvider({ children }: { children: React.ReactNode }) {
+  const [favorite, dispatch] = useReducer(
+    favoriteReducer,
+    [],
+    getInitialFavorites,
+  );
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("favorites");
-    if (stored) {
-      SetFavorite(JSON.parse(stored));
-    }
-    setHydrated(true);
+    localStorage.setItem("shopnext_favourites", JSON.stringify(favorite));
+  }, [favorite]);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (hydrated) {
-      localStorage.setItem("favorites", JSON.stringify(favorite));
-    }
-  }, [favorite, hydrated]);
 
   return (
     <FavoriteContext.Provider

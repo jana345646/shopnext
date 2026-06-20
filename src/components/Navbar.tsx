@@ -20,13 +20,21 @@ function Navbar() {
   const favoriteData = useContext(FavoriteContext);
   const { setOpen } = useContext(SidebarContext);
 
-  if (!productsData || !categoriesData || !cartData || !authData) return null;
+  if (
+    !productsData ||
+    !categoriesData ||
+    !cartData ||
+    !authData ||
+    !favouriteData
+  )
+    return null;
 
   const { setSelectedCategory } = productsData;
   const { category, error } = categoriesData;
   const { cart, mounted, setIsCartOpen } = cartData;
   const { user, logout } = authData;
-  const { favorite } = favoriteData;
+
+  const { favorite } = favouriteData;
 
   const cartCount = cart.reduce((total, item) => {
     // this code is not stored in local storage it is done by every render
@@ -80,29 +88,24 @@ function Navbar() {
               </>
             )}
 
-            <div className=" flex relative pt-2">
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="rounded-[0.3rem] font-bold p-2 text-white"
-              >
+            <div className=" flex relative">
+              <button onClick={() => setIsCartOpen(true)}>
                 <IoCartOutline className="text-2xl text-white" />
-                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
+                <span className="absolute -top-4 right-1 rounded-full text-sm text-white pt-3">
                   {mounted ? cartCount : 0}
                 </span>
               </button>
               <CartDrawer />
             </div>
 
-            <div className="flex relative pt-2">
-              <Link
-                href="/favorites"
-                className="rounded-[0.3rem] font-bold p-2 text-white"
-              >
-                <IoHeartOutline className="text-2xl text-white" />
-
-                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
-                  {favoriteCount}
-                </span>
+            <div className=" flex relative ml-2">
+              <Link href={"/favourite"}>
+                <button>
+                  <FaRegHeart className="text-xl text-white mt-4" />
+                  <span className="absolute -top-4 right-1 rounded-full  text-sm text-white pt-3">
+                    {mounted ? favorite.length : 0}
+                  </span>
+                </button>
               </Link>
             </div>
           </div>

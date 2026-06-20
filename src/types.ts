@@ -33,3 +33,15 @@ export type CartActions = // we make a type for the actions here to specify the 
   | { type: "REMOVE_ITEM"; payload: { id: number } }
   | { type: "UPDATE_QTY"; payload: { id: number; quantity: number } }
   | { type: "CLEAR_CART" };
+
+export interface FavoriteProduct {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+  quantity: number;
+}
+
+export type FavoriteActions =
+  | { type: "TOGGLE_FAVOURITE"; payload: FavoriteProduct }
+  | { type: "CLEAR_FAVOURITES" };

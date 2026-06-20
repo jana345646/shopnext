@@ -71,7 +71,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+
 
   const logout = async () => {
     try {
