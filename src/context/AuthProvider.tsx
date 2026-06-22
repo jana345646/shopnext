@@ -4,22 +4,24 @@ import { AuthContext } from "./AuthContext";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  User,
+  signInWithEmailAndPassword, // a function responsible for login
+  signOut, // a function responsible for logout
+  onAuthStateChanged, // a function responsible to check if there is a user in every change or not
+  createUserWithEmailAndPassword, // a function responsible for sign up
+  User, // type for the data of each user
 } from "firebase/auth";
-import { auth } from "@/firebase";
+import { auth } from "@/firebase"; // we call the variable that holds the firebase authentictaion (login / logout / register)
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
+export default function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
 
-  // 🔐 Auth state
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string>("");
 
-  // 🔐 UI states
   const [formEmail, setFormEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,15 +32,14 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
-
         const idToken = await firebaseUser.getIdToken();
         setToken(idToken);
+        // 👇 ضيفي السطر ده هنا عشان يعلم إن الـ user جوه الأبلكيشن
+        localStorage.setItem("shopnext_logged_in", "true");
       } else {
         setUser(null);
         setToken("");
@@ -72,33 +73,24 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-
-
+  };
   const logout = async () => {
     try {
-      // 1️⃣ تسجيل الخروج من Firebase
       await signOut(auth);
 
-      // 2️⃣ تنظيف بيانات الفورم والأخطاء
+      setUser(null);
+      setToken("");
+
+      // 👇 ضيفي السطر ده هنا عشان نمسح العلامة تماماً وقت الـ logout صراحةً
+      localStorage.removeItem("shopnext_logged_in");
+
       setFormEmail("");
       setPassword("");
       setUsernameError("");
       setPasswordError("");
       setError("");
 
-      // 3️⃣ تمسح الـ Cart والـ Favorites من الـ LocalStorage (تأكد من الأسماء اللي مسميها في الـ CartContext)
-      localStorage.removeItem("cart");
-      localStorage.removeItem("favorites");
-      // لو عايز تمسح أي حاجة تانية متسيفة في الكاش، تقدر تستخدم: localStorage.clear();
-
-      console.log("🔥 AFTER SIGNOUT:", auth.currentUser);
-
-      // 4️⃣ توجهه لصفحة الـ login
-      router.replace("/login");
-
-      // 5️⃣ السحر هنا: بيعمل ريفريش كامل للصفحة، فكل الـ Contexts التانية (زي CartContext)
-      // هترجع للـ Initial State (الفاضية) كأن الأبليكيشن لسه بيفتح لأول مرة
-      window.location.reload();
+      router.replace("/");
     } catch (err) {
       console.error("Logout Error:", err);
     }

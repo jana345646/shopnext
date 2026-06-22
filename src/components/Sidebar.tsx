@@ -2,21 +2,35 @@
 
 import { useContext } from "react";
 import Link from "next/link";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoCartOutline } from "react-icons/io5";
+import { FaRegHeart } from "react-icons/fa";
 import { SidebarContext } from "@/context/SidebarContext";
-import CartContext from "@/context/CartContext";
-import { IoCartOutline } from "react-icons/io5";
+import { CartContext } from "@/context/CartContext";
+import { FavoriteContext } from "@/context/FavoriteContext";
+import { IoHomeOutline } from "react-icons/io5";
 
 export default function Sidebar() {
   const { open, setOpen } = useContext(SidebarContext);
-  const cartData = useContext(CartContext);
-  const { cart, addToCart } = cartData;
 
-  if (!cartData) return null;
-  const cartCount = cart.reduce((total, item) => {
-    // reduce it loops on the array to return only one value
-    return total + item.quantity;
-  }, 0); // the initial value is zero
+  const cartData = useContext(CartContext);
+  const favoriteData = useContext(FavoriteContext);
+
+  if (!cartData || !favoriteData) return null;
+
+  const { cart, mounted } = cartData;
+  const { favorite } = favoriteData;
+
+  const cartCount = mounted
+    ? cart.reduce((total, item) => total + item.quantity, 0)
+    : 0;
+
+  const favoriteCount = mounted ? favorite.length : 0;
+
+  const linkClass =
+    "flex items-center gap-3 p-2 rounded hover:bg-white/10 transition";
+
+  const badgeClass =
+    "ml-auto bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full";
 
   return (
     <>
@@ -28,40 +42,43 @@ export default function Sidebar() {
       )}
 
       <div
-        className={`fixed top-0 left-0 h-full w-[250px] bg-[#1E1E1E] text-white z-50 transition-transform duration-300 ${
-          open ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 right-0 h-full w-[250px] bg-[#1E1E1E] text-white z-50 transition-transform duration-300 ${
+          open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <button className="text-2xl p-4" onClick={() => setOpen(false)}>
-          <IoClose />
-        </button>
+        <div className="flex justify-end">
+          <button className="text-2xl p-4" onClick={() => setOpen(false)}>
+            <IoClose />
+          </button>
+        </div>
 
-        {/* LINKS */}
-        <div className="flex flex-col gap-4 p-4">
-          <Link href="/" onClick={() => setOpen(false)}>
-            Home
+        <div className="flex flex-col gap-2 p-4">
+          {/* HOME */}
+          <Link href="/" onClick={() => setOpen(false)} className={linkClass}>
+            <IoHomeOutline className="text-xl" />
+            <span>Home</span>
           </Link>
-
-          <Link href="/favorites" onClick={() => setOpen(false)}>
-            Favorites
-          </Link>
-
-          {/* 🛒 CART INSIDE SIDEBAR */}
+          {/* CART */}
           <Link
             href="/cart"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-2"
+            className={linkClass}
           >
             <IoCartOutline className="text-xl" />
-
-            <span className="ml-auto bg-yellow-500 text-black text-xs px-2 rounded-full">
-              {cartCount}
-            </span>
+            <span>Cart</span>
+            <span className={badgeClass}>{cartCount}</span>
           </Link>
 
-          <span className="ml-auto bg-yellow-500 text-black text-xs px-2 rounded-full">
-            {cartCount}
-          </span>
+          {/* FAVORITES */}
+          <Link
+            href="/favourite"
+            onClick={() => setOpen(false)}
+            className={linkClass}
+          >
+            <FaRegHeart className="text-xl" />
+            <span>Favourites</span>
+            <span className={badgeClass}>{favoriteCount}</span>
+          </Link>
         </div>
       </div>
     </>

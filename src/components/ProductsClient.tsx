@@ -17,12 +17,6 @@ interface ProductsClientProps {
 export default function ProductsClient({ categoryData }: ProductsClientProps) {
   const productscontext = useContext(ProductsContext);
 
-  useEffect(() => {
-    if (productscontext) {
-      productscontext.setSelectedCategory(categoryData);
-    }
-  }, [categoryData, productscontext]);
-
   if (!productscontext) return null;
 
   const { filteredProducts, offline, products, error, retryFetch } =

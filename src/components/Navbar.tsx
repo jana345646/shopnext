@@ -3,131 +3,84 @@ import { useContext } from "react";
 import { ProductsContext } from "@/context/ProductsContext";
 import { CategoryContext } from "@/context/CategoriesContext";
 import { IoCartOutline } from "react-icons/io5";
-import { CartContext } from "@/context/CartContext";
 import Link from "next/link";
 import { AuthContext } from "@/context/AuthContext";
-import { FavoriteContext } from "@/context/FavoriteContext";
-import { IoHeartOutline } from "react-icons/io5";
 import Sidebar from "@/components/Sidebar";
 import { SidebarContext } from "@/context/SidebarContext";
 import { IoMenu } from "react-icons/io5";
+import CartDrawer from "./CartDrawer";
 
 function Navbar() {
   const productsData = useContext(ProductsContext);
   const categoriesData = useContext(CategoryContext);
-  const cartData = useContext(CartContext);
   const authData = useContext(AuthContext);
-  const favoriteData = useContext(FavoriteContext);
   const { setOpen } = useContext(SidebarContext);
 
-  if (
-    !productsData ||
-    !categoriesData ||
-    !cartData ||
-    !authData ||
-    !favoriteData
-  )
-    return null;
+  if (!productsData || !categoriesData || !authData) return null;
   const { setSelectedCategory, selectedCategory } = productsData;
->>>>>>> aa09f57 (login authentication with firebase)
   const { category, error } = categoriesData;
-  const { cart, mounted, setIsCartOpen } = cartData;
   const { user, logout } = authData;
-  const { favorite } = favoriteData;
-
-  const { favorite } = favouriteData;
-
-  const cartCount = cart.reduce((total, item) => {
-    // this code is not stored in local storage it is done by every render
-    // reduce it loops on the array to return only one value
-    return total + item.quantity;
-  }, 0); // the initial value is zero
-
-  const favoriteCount = favorite.length;
 
   return (
-    <div className="w-full bg-[#1E1E1E] flex justify-between px-[2rem] py-4 items-center">
-      <div className="flex flex-col">
+    <div className="w-full bg-[#1E1E1E] flex items-center px-8 py-4">
+      {/* LEFT - LOGO */}
+      <div className="flex-1 flex flex-col">
         <p className="text-white font-bold text-2xl">
           <span className="text-yellow-500">S</span>hopNext
         </p>
         <p className="font-normal text-[0.6rem] text-white">ONLINE SHOPPING</p>
       </div>
-      <div className="flex gap-8 font-normal text-lg text-white">
-        {!error && ( // if there is no error
-          <div className="w-full flex gap-3">
-            <button
-              className="rounded-[0.3rem] font-bold p-2 text-white"
-              onClick={() => setSelectedCategory("")}
-            >
-              All
-            </button>
 
-            {category?.map((cat) => (
+      {/* CENTER - CATEGORIES */}
+      {/* CENTER - CATEGORIES */}
+      <div className="flex-1 hidden md:flex justify-center items-center">
+        <div className="flex gap-6 font-bold text-white items-center whitespace-nowrap">
+          {!error && (
+            <>
               <button
-                className=" font-bold p-2 text-white"
-                key={cat as unknown as string}
-                onClick={() => setSelectedCategory(cat as unknown as string)}
+                className="cursor-pointer"
+                onClick={() => setSelectedCategory("")}
               >
-                {cat as unknown as string}
+                All
               </button>
-            ))}
 
-            <Link href={"/register"}>
-              <button>Sign Up</button>
+              {category?.map((cat) => (
+                <button
+                  key={cat as string}
+                  onClick={() => setSelectedCategory(cat as string)}
+                  className="cursor-pointer"
+                >
+                  {cat as string}
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* RIGHT - AUTH + MENU */}
+      <div className="flex-1 flex justify-end items-center gap-4 text-white font-bold">
+        {!user ? (
+          <>
+            <Link href="/login" className="cursor-pinter">
+              Login
             </Link>
 
-            {!user ? (
-              <Link href="/login" className="font-bold p-3 text-white">
-                Login
-              </Link>
-            ) : (
-              <>
-                <button className="font-bold" onClick={logout}>
-                  Logout
-                </button>
-              </>
-            )}
-
-            <div className=" flex relative">
-              <button onClick={() => setIsCartOpen(true)}>
-                <IoCartOutline className="text-2xl text-white" />
-                <span className="absolute -top-4 right-1 rounded-full text-sm text-white pt-3">
-                  {mounted ? cartCount : 0}
-                </span>
-              </button>
-              <CartDrawer />
-            </div>
-
-            <div className=" flex relative ml-2">
-              <Link href={"/favourite"}>
-                <button>
-                  <FaRegHeart className="text-xl text-white mt-4" />
-                  <span className="absolute -top-4 right-1 rounded-full  text-sm text-white pt-3">
-                    {mounted ? favorite.length : 0}
-                  </span>
-                </button>
-              </Link>
-            </div>
-
-            <div className="flex relative pt-2">
-              <Link
-                href="/favorites"
-                className="rounded-[0.3rem] font-bold p-2 text-white"
-              >
-                <IoHeartOutline className="text-2xl text-white" />
-
-                <span className="absolute -top-4 right-1 rounded-full px-2 text-sm text-white pt-3">
-                  {favoriteCount}
-                </span>
-              </Link>
-            </div>
-          </div>
+            <Link href="/register" className="cursor-pinter">
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <button onClick={logout} className="hover:text-red-400">
+            Logout
+          </button>
         )}
+
+        {/* MENU ICON */}
+        <button onClick={() => setOpen(true)} className="text-white text-3xl">
+          <IoMenu />
+        </button>
       </div>
-      <button onClick={() => setOpen(true)} className="text-white text-3xl">
-        <IoMenu />
-      </button>{" "}
     </div>
   );
 }

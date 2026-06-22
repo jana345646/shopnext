@@ -17,7 +17,7 @@ export default function LogIn() {
     login,
     formEmail,
     setFormEmail,
-    password, // ✅ تم تعديلها لـ p سمول عشان تطابق الـ Context
+    password,
     setPassword,
     error,
     setError,
@@ -60,7 +60,7 @@ export default function LogIn() {
       setLoading(true);
       setError("");
 
-      await login(formEmail, password); // ✅ سمول
+      await login(formEmail, password);
 
       const searchParams = new URLSearchParams(window.location.search);
       const next = searchParams.get("next");
@@ -88,7 +88,6 @@ export default function LogIn() {
       <div className="w-[40%] flex flex-col gap-[2rem] justify-center">
         <h1 className="text-5xl text-center">User Login</h1>
 
-        {/* ✅ ضفنا autoComplete="off" هنا */}
         <form
           className="flex flex-col gap-[2rem]"
           onSubmit={handleSubmit}
