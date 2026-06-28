@@ -22,12 +22,12 @@ export default function ProductsClient() {
   }
 
   return (
-    <div className="py-6 px-[4.5rem] bg-[#E9E9E9]">
+    <div className="py-6 px-4 md:px-6 lg:px-10 bg-[#E9E9E9]">
       <OfflineBanner show={offline} />
 
       <Sorting />
 
-      <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 ">
+      <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 overflow-x-hidden ">
         {loading ? (
           Array.from({ length: 8 }).map((_, key) => (
             <ProductSkeleton key={key} />
