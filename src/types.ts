@@ -11,7 +11,7 @@ export interface Product {
   };
 }
 
-export type Category = string[];
+export type Category = string; // we use type as it is ana array not an object
 
 export type CartItem = {
   product: Product;

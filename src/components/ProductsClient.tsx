@@ -1,6 +1,6 @@
-"use client";
+"use client"; // it runs the component on the client side (browser , we use it with the user interactions with the website) not on the server side
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react"; // this is a hook to can read from the context
 import { ProductsContext } from "@/context/ProductsContext";
 import ProductCard from "@/components/ProductCard";
 import Sorting from "@/components/Sorting";
@@ -8,51 +8,34 @@ import OfflineBanner from "@/components/OfflineBanner";
 import EmptyState from "@/components/EmptyState";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import ProductsError from "./ProductsError";
-import Link from "next/link"; // استوردنا Link عشان يرجع للـ Home بسرعة
+import Link from "next/link"; //this is a component in next that navigate between the pages without reloading
 
-interface ProductsClientProps {
-  categoryData: string;
-}
+export default function ProductsClient() {
+  const productsData = useContext(ProductsContext);
 
-export default function ProductsClient({ categoryData }: ProductsClientProps) {
-  const productscontext = useContext(ProductsContext);
+  if (!productsData) return null; //this means if there is no data returned from the context (no provider) , don't run the component
 
-  if (!productscontext) return null;
-
-  const { filteredProducts, offline, products, error, retryFetch } =
-    productscontext;
+  const { filteredProducts, offline, products, error, loading } = productsData;
 
   if (error) {
-    return <ProductsError onRetry={retryFetch} />;
+    return <ProductsError />;
   }
 
   return (
-    <div className="pt-3 pb-6 bg-[#E9E9E9] px-[4.5rem]">
+    <div className="py-6 px-[4.5rem] bg-[#E9E9E9]">
       <OfflineBanner show={offline} />
-
-      {categoryData && (
-        <div className="flex items-center gap-2 text-sm ">
-          <Link href="/" className="text-lg text-gray-500 flex gap-2 my-4 pl-4">
-            Home
-          </Link>
-          <span>{">"}</span>
-          <span className="text-lg text-black flex gap-2 my-4 pl-4">
-            {categoryData}
-          </span>
-        </div>
-      )}
 
       <Sorting />
 
-      <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 items-start justify-center">
-        {!products || products.length === 0 ? (
-          [...Array(8)].map((_, key) => <ProductSkeleton key={key} />)
-        ) : filteredProducts?.length > 0 ? (
-          filteredProducts
-            .filter((product) => product && product.id)
-            .map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
+      <div className="w-full grid grid-cols-2 lg:grid-cols-4 gap-5 ">
+        {loading ? (
+          Array.from({ length: 8 }).map((_, key) => (
+            <ProductSkeleton key={key} />
+          ))
+        ) : filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
         ) : (
           <EmptyState />
         )}

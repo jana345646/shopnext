@@ -1,64 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Product } from "@/types";
+import { useMemo, useState } from "react";
 import { ProductsContext } from "./ProductsContext";
-import { fetchProducts } from "@/lib/api";
+
+import { useProducts } from "@/hooks/useProducts";
+import { useCategories } from "@/hooks/useCategories";
+import { useOnlineStatus } from "@/hooks/useNetworkStatus";
 
 export default function ProductsProvider({
-  //layout.tsx automatically send the children here (children is the current page that is opened in the site) , and any children here can use this provider to reach the data from the context
-  children, //ProductsProvider({children: <Page />}) react send it as an object so we detruct it here
+  children,
 }: {
   children: React.ReactNode;
 }) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { products, loading, error, retry } = useProducts();
+  const { categories, categoriesError } = useCategories();
+  const { offline } = useOnlineStatus();
+
   const [sortType, setSortType] = useState<"asc" | "desc">("asc");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [offline, setOffline] = useState(false);
-  const [error, SetError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // ueseEffect dont take an async function directly so we used ()=>{}
-    async function Products() {
-      try {
-        SetError(null);
-        // throw new Error("Test Error");
-
-        const data = await fetchProducts();
-
-        setProducts(data);
-      } catch (error) {
-        SetError("Something went wrong");
-      }
-    }
-
-    Products();
-  }, []);
-
-  const retryFetch = async () => {
-    try {
-      SetError(null);
-
-      const data = await fetchProducts();
-
-      setProducts(data);
-    } catch (error) {
-      SetError("Something went wrong");
-    }
-  };
-
-  useEffect(() => {
-    const handleOffline = () => setOffline(true);
-    const handleOnline = () => setOffline(false);
-
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-
-    return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-    };
-  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -71,7 +30,7 @@ export default function ProductsProvider({
 
     if (sortType === "asc") {
       result.sort((a, b) => a.price - b.price);
-    } else if (sortType === "desc") {
+    } else {
       result.sort((a, b) => b.price - a.price);
     }
 
@@ -81,19 +40,23 @@ export default function ProductsProvider({
   return (
     <ProductsContext.Provider
       value={{
-        // first {to can write js in the jsx} , second {to create an object}
         products,
-        setProducts,
-        filteredProducts,
+        loading,
+        error,
+        retry,
+
+        categories,
+        categoriesError,
+
+        offline,
+
         sortType,
         setSortType,
+
         selectedCategory,
         setSelectedCategory,
-        offline,
-        setOffline,
-        error,
-        SetError,
-        retryFetch,
+
+        filteredProducts,
       }}
     >
       {children}

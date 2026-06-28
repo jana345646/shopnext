@@ -15,7 +15,14 @@ function Sorting() {
       <select
         className="bg-[#1E1E1E] w-[9rem] text-white p-2 rounded-[0.3rem] cursor-pointer"
         value={sortType}
-        onChange={(e) => setSortType(e.target.value as "asc" | "desc")}
+        onChange={(e) => {
+          const value = e.target.value;
+
+          if (value === "asc" || value === "desc") {
+            // we make this to avoid any other value to be saved it the state if later any new value is added
+            setSortType(value);
+          }
+        }}
       >
         <option value="asc">Lowest Price</option>
         <option value="desc">Highest Price</option>

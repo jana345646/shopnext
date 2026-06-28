@@ -1,29 +1,25 @@
 "use client";
 
-import Link from "next/link";
+import { ProductsContext } from "@/context/ProductsContext";
+import { useContext } from "react";
 
-type Props = {
-  onRetry: () => void;
-};
+export default function ProductsError() {
+  const productsData = useContext(ProductsContext);
 
-export default function ProductsError({ onRetry }: Props) {
+  if (!productsData) return null;
+
+  const { retry } = productsData;
+
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center font-bold my-8 gap-4 ">
       <p>Something went wrong</p>
 
       <button
         className="text-white bg-[#1E1E1E] p-3 w-[20%] rounded-[0.3rem]"
-        onClick={onRetry}
+        onClick={retry}
       >
         Retry
       </button>
-
-      <Link
-        href="/"
-        className="text-sm text-gray-500 underline hover:text-black font-normal"
-      >
-        Back to Home
-      </Link>
     </div>
   );
 }
