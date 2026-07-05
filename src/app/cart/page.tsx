@@ -8,6 +8,8 @@ import { FiMinus, FiPlus } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Link from "next/link";
 import SummarySectionCart from "@/components/SummarySectionCart";
+import { CartProduct } from "@/types";
+
 export default function CartPage() {
   const cartData = useContext(CartContext);
 
@@ -15,7 +17,7 @@ export default function CartPage() {
 
   const { cart, dispatch, storageAvailable } = cartData;
 
-  function editAddButton(item) {
+  function editAddButton(item: CartProduct) {
     dispatch({
       type: "UPDATE_QTY",
       payload: {
@@ -25,17 +27,24 @@ export default function CartPage() {
     });
   }
 
-  function editRemoveButton(item) {
-    dispatch({
-      type: "UPDATE_QTY",
-      payload: {
-        id: item.id,
-        quantity: item.quantity - 1,
-      },
-    });
+  function editRemoveButton(item: CartProduct) {
+    if (item.quantity === 1) {
+      dispatch({
+        type: "REMOVE_ITEM",
+        payload: { id: item.id },
+      });
+    } else {
+      dispatch({
+        type: "UPDATE_QTY",
+        payload: {
+          id: item.id,
+          quantity: item.quantity - 1,
+        },
+      });
+    }
   }
 
-  function removeItem(item) {
+  function removeItem(item: CartProduct) {
     dispatch({
       type: "REMOVE_ITEM",
       payload: { id: item.id },
@@ -43,15 +52,13 @@ export default function CartPage() {
   }
 
   function deleteCart() {
-    // we wirte the dispatch in a function to be done after the component is rendered
     dispatch({
-      //dispatch sent an object as we define it like that in the types
       type: "CLEAR_CART",
     });
   }
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute next="/cart">
       {!storageAvailable && (
         <div className="text-2xl h-screen text-center mt-8 rounded mb-4">
           Your cart won't be saved after refresh.
@@ -104,11 +111,8 @@ export default function CartPage() {
 
                 <div className="flex justify-center">
                   <div className="flex w-[10rem] h-10 bg-[#F0F0F0] rounded-[3rem] justify-around items-center">
-                    <button
-                      onClick={() => editRemoveButton(item)}
-                      disabled={item.quantity <= 0}
-                      className={item.quantity <= 0 ? "opacity-50" : ""}
-                    >
+                    {/* 👇 تم تعديل الزرار هنا وشيلنا الـ disabled */}
+                    <button onClick={() => editRemoveButton(item)}>
                       <FiMinus />
                     </button>
 

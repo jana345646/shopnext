@@ -1,4 +1,5 @@
 "use client";
+
 import { useReducer, useEffect, useState, useContext } from "react";
 import { CartContext, cartReducer } from "./CartContext";
 import { AuthContext } from "@/context/AuthContext";
@@ -17,13 +18,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, dispatch] = useReducer(cartReducer, undefined, getInitialCart);
   const [mounted, setMounted] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
   const auth = useContext(AuthContext);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 1. حفظ الداتا (بيحفظ علطول طول ما الـ component عملت mount)
   useEffect(() => {
     if (!mounted) return;
 
@@ -34,17 +35,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart, mounted]);
 
-  // 2. عند الـ Logout الصريح (مش هيشتغل وقت الـ Refresh لأن الـ flag هيكون لسه موجود)
   useEffect(() => {
     if (!mounted) return;
+    if (auth?.loadingAuth) return;
 
-    const isLoggedIn = localStorage.getItem("shopnext_logged_in") === "true";
-
-    if (!auth?.user && !isLoggedIn) {
+    if (!auth?.user) {
       dispatch({ type: "CLEAR_CART" });
       localStorage.removeItem("shopnext_cart");
     }
-  }, [auth?.user, mounted]);
+  }, [auth?.user, auth?.loadingAuth, mounted]);
 
   return (
     <CartContext.Provider
@@ -52,11 +51,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cart,
         dispatch,
         mounted,
-        setMounted,
         isCartOpen,
         setIsCartOpen,
-        storageAvailable: true,
-        setStorageAvailable: () => {},
+        storageAvailable: typeof window !== "undefined",
       }}
     >
       {children}

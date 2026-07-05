@@ -15,23 +15,21 @@ export async function fetchCategories() {
 
   return res.json();
 }
-export async function fetchProduct(id: string | number) {
-  const productId = Number(id);
+export async function fetchProduct(id: string) {
+  const productId = Number(id); // we convert the id to a number as the api only behaves with numbers
 
   if (isNaN(productId)) {
+    // if the id is not a number stop the function and throw an error
     throw new Error("Invalid product id");
   }
 
   try {
-    const res = await fetch(`https://fakestoreapi.com/products/${productId}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`https://fakestoreapi.com/products/${productId}`);
 
     if (!res.ok) throw new Error("Product not found");
 
     return await res.json();
   } catch (err) {
     console.error("fetch failed:", err);
-    throw new Error("Something went wrong");
   }
 }

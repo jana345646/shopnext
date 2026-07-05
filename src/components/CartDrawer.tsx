@@ -6,6 +6,7 @@ import { FiMinus, FiPlus } from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { CartProduct } from "@/types";
 
 export default function CartDrawer() {
   const cartData = useContext(CartContext);
@@ -13,7 +14,7 @@ export default function CartDrawer() {
 
   const { isCartOpen, setIsCartOpen, cart, dispatch } = cartData;
 
-  function editAddButton(item) {
+  function editAddButton(item: CartProduct) {
     dispatch({
       type: "UPDATE_QTY",
       payload: {
@@ -23,17 +24,18 @@ export default function CartDrawer() {
     });
   }
 
-  function editRemoveButton(item) {
-    dispatch({
-      type: "UPDATE_QTY",
-      payload: {
-        id: item.id,
-        quantity: item.quantity - 1,
-      },
-    });
+  function editRemoveButton(item: CartProduct) {
+    if (item.quantity === 1) {
+      dispatch({ type: "REMOVE_ITEM", payload: { id: item.id } });
+    } else {
+      dispatch({
+        type: "UPDATE_QTY",
+        payload: { id: item.id, quantity: item.quantity - 1 },
+      });
+    }
   }
 
-  function removeItem(item) {
+  function removeItem(item: CartProduct) {
     dispatch({
       type: "REMOVE_ITEM",
       payload: { id: item.id },
@@ -87,7 +89,6 @@ export default function CartDrawer() {
                   </Link>
                 </div>
               ) : (
-                /* CART ITEMS */
                 cart.map((item) => (
                   <div key={item.id} className="flex gap-4 items-start mb-6">
                     <div className="relative w-16 h-[10vh] flex-shrink-0">
@@ -135,7 +136,6 @@ export default function CartDrawer() {
               )}
             </div>
 
-            {/* FOOTER (only show if cart not empty) */}
             {cart.length > 0 && (
               <>
                 <div className="flex justify-around mt-[3rem]">

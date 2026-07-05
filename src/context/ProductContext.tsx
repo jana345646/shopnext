@@ -3,18 +3,18 @@ import { Product } from "@/types";
 
 export type ProductContextType = {
   product: Product | null;
-  SetProduct: React.Dispatch<React.SetStateAction<number>>;
+  setProduct: React.Dispatch<React.SetStateAction<Product | null>>;
   stepper: number;
-  SetStepper: React.Dispatch<React.SetStateAction<number>>;
+  setStepper: React.Dispatch<React.SetStateAction<number>>;
   notFound: boolean;
-  setNotFound: React.Dispatch<React.SetStateAction<number>>;
+  setNotFound: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const ProductContext = createContext<ProductContextType>({
+export const ProductContext = createContext<ProductContextType | null>({
   product: null,
-  SetProduct: () => {},
+  setProduct: () => {},
   stepper: 1,
-  SetStepper: () => {},
+  setStepper: () => {},
   notFound: false,
   setNotFound: () => {},
 });

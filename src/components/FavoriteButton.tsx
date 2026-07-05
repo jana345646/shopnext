@@ -3,9 +3,9 @@
 import { useContext } from "react";
 import { FavoriteContext } from "@/context/FavoriteContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { Product } from "@/types";
+import { FavoriteProduct } from "@/types";
 
-function FavoriteButton({ product }: { product: Product }) {
+function FavoriteButton({ product }: { product: FavoriteProduct }) {
   const favoriteData = useContext(FavoriteContext);
 
   if (!favoriteData) return null;
@@ -20,7 +20,12 @@ function FavoriteButton({ product }: { product: Product }) {
 
     dispatch({
       type: "TOGGLE_FAVOURITE",
-      payload: product,
+      payload: {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+      },
     });
   };
   return isFavorite ? (

@@ -27,7 +27,6 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
-  // 1. حفظ المفضلة (بيحفظ علطول طول ما الـ component عملت mount)
   useEffect(() => {
     if (!mounted) return;
 
@@ -38,13 +37,10 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
     }
   }, [favorite, mounted]);
 
-  // 2. عند الـ Logout الصريح
   useEffect(() => {
     if (!mounted) return;
 
-    const isLoggedIn = localStorage.getItem("shopnext_logged_in") === "true";
-
-    if (!auth?.user && !isLoggedIn) {
+    if (!auth?.loadingAuth && !auth?.user) {
       dispatch({ type: "CLEAR_FAVOURITES" });
       localStorage.removeItem("shopnext_favourites");
     }

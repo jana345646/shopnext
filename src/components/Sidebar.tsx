@@ -2,23 +2,26 @@
 
 import { useContext } from "react";
 import Link from "next/link";
-import { IoClose, IoCartOutline } from "react-icons/io5";
+import { IoClose, IoCartOutline, IoHomeOutline } from "react-icons/io5";
 import { FaRegHeart } from "react-icons/fa";
+
 import { SidebarContext } from "@/context/SidebarContext";
 import { CartContext } from "@/context/CartContext";
 import { FavoriteContext } from "@/context/FavoriteContext";
-import { IoHomeOutline } from "react-icons/io5";
+import { ProductsContext } from "@/context/ProductsContext";
 
 export default function Sidebar() {
   const { open, setOpen } = useContext(SidebarContext);
 
   const cartData = useContext(CartContext);
   const favoriteData = useContext(FavoriteContext);
+  const productsData = useContext(ProductsContext);
 
-  if (!cartData || !favoriteData) return null;
+  if (!cartData || !favoriteData || !productsData) return null;
 
   const { cart, mounted } = cartData;
   const { favorite } = favoriteData;
+  const { categories, setSelectedCategory } = productsData;
 
   const cartCount = mounted
     ? cart.reduce((total, item) => total + item.quantity, 0)
@@ -42,10 +45,11 @@ export default function Sidebar() {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-[250px] bg-[#1E1E1E] text-white z-50 transition-transform duration-300 ${
+        className={`fixed top-0 right-0 h-full w-[270px] bg-[#1E1E1E] text-white z-50 transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* CLOSE BUTTON */}
         <div className="flex justify-end">
           <button className="text-2xl p-4" onClick={() => setOpen(false)}>
             <IoClose />
@@ -58,6 +62,7 @@ export default function Sidebar() {
             <IoHomeOutline className="text-xl" />
             <span>Home</span>
           </Link>
+
           {/* CART */}
           <Link
             href="/cart"
@@ -71,7 +76,7 @@ export default function Sidebar() {
 
           {/* FAVORITES */}
           <Link
-            href="/favourite"
+            href="/favorite"
             onClick={() => setOpen(false)}
             className={linkClass}
           >
@@ -79,6 +84,37 @@ export default function Sidebar() {
             <span>Favourites</span>
             <span className={badgeClass}>{favoriteCount}</span>
           </Link>
+
+          {/* divider */}
+          <div className="border-t border-white/20 my-2" />
+
+          {/* CATEGORIES (mobile only) */}
+          <div className="block md:hidden">
+            <div className="text-sm text-gray-300 px-2">Categories</div>
+
+            <button
+              onClick={() => {
+                setSelectedCategory("");
+                setOpen(false);
+              }}
+              className={linkClass}
+            >
+              All
+            </button>
+
+            {categories?.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setOpen(false);
+                }}
+                className={linkClass}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </>

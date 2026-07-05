@@ -3,54 +3,43 @@
 import Image from "next/image";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaSpinner } from "react-icons/fa";
 
 export default function LogIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const authData = useContext(AuthContext);
   const router = useRouter();
 
   if (!authData) return null;
 
-  const {
-    login,
-    formEmail,
-    setFormEmail,
-    password,
-    setPassword,
-    error,
-    setError,
-    usernameError,
-    setUsernameError,
-    passwordError,
-    setPasswordError,
-    showPassword,
-    setShowPassword,
-    loading,
-    setLoading,
-  } = authData;
+  const { login } = authData;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let hasError = false;
 
-    setUsernameError("");
+    setEmailError("");
     setPasswordError("");
 
-    if (!formEmail) {
-      setUsernameError("Email is required");
+    if (!email) {
+      setEmailError("Email is required");
       hasError = true;
     }
 
     if (!password) {
-      // ✅ سمول
       setPasswordError("Password is required");
-      hasError = true;
-    } else if (password.length < 4) {
-      // ✅ سمول
-      setPasswordError("Password must be at least 4 characters");
       hasError = true;
     }
 
@@ -60,13 +49,13 @@ export default function LogIn() {
       setLoading(true);
       setError("");
 
-      await login(formEmail, password);
+      await login(email, password);
 
       const searchParams = new URLSearchParams(window.location.search);
       const next = searchParams.get("next");
 
       router.push(next || "/");
-    } catch (error) {
+    } catch {
       setError("Invalid email or password");
     } finally {
       setLoading(false);
@@ -99,19 +88,17 @@ export default function LogIn() {
               type="text"
               autoComplete="none"
               className={`border-b outline-none w-[80%] transition-colors ${
-                usernameError ? "border-red-500" : "border-gray-500"
+                emailError ? "border-red-500" : "border-gray-500"
               }`}
-              value={formEmail}
+              value={email}
               onChange={(e) => {
-                setFormEmail(e.target.value);
-                setUsernameError("");
+                setEmail(e.target.value);
+                setEmailError("");
               }}
             />
 
-            {usernameError && (
-              <p className="text-red-500 text-sm mt-1 w-[80%] ">
-                {usernameError}
-              </p>
+            {emailError && (
+              <p className="text-red-500 text-sm mt-1 w-[80%] ">{emailError}</p>
             )}
           </div>
 
@@ -125,7 +112,7 @@ export default function LogIn() {
                 className={`border-b outline-none w-full pr-8 transition-colors ${
                   passwordError ? "border-red-500" : "border-gray-500"
                 }`}
-                value={password} // ✅ سمول
+                value={password}
                 onChange={(e) => {
                   setPassword(e.target.value);
                   setPasswordError("");
@@ -138,7 +125,7 @@ export default function LogIn() {
 
               {showPassword ? (
                 <FaEyeSlash
-                  onClick={() => setShowPassword(false)}
+                  onClick={() => setShowPassword((p) => !p)}
                   className="absolute right-0 top-[35%] -translate-y-1/2 cursor-pointer text-lg"
                 />
               ) : (

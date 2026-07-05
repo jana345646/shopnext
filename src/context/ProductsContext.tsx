@@ -1,3 +1,4 @@
+"use client";
 import { createContext } from "react";
 import { Product, Category } from "@/types";
 

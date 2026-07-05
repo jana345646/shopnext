@@ -18,32 +18,23 @@ export default function AuthProvider({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string>("");
-
-  const [formEmail, setFormEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [error, setError] = useState("");
-
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser || null);
+
       if (firebaseUser) {
-        setUser(firebaseUser);
         const idToken = await firebaseUser.getIdToken();
         setToken(idToken);
-        // 👇 ضيفي السطر ده هنا عشان يعلم إن الـ user جوه الأبلكيشن
-        localStorage.setItem("shopnext_logged_in", "true");
       } else {
-        setUser(null);
         setToken("");
       }
+
+      setLoadingAuth(false);
     });
 
     return () => unsubscribe();
@@ -81,15 +72,6 @@ export default function AuthProvider({
       setUser(null);
       setToken("");
 
-      // 👇 ضيفي السطر ده هنا عشان نمسح العلامة تماماً وقت الـ logout صراحةً
-      localStorage.removeItem("shopnext_logged_in");
-
-      setFormEmail("");
-      setPassword("");
-      setUsernameError("");
-      setPasswordError("");
-      setError("");
-
       router.replace("/");
     } catch (err) {
       console.error("Logout Error:", err);
@@ -100,32 +82,15 @@ export default function AuthProvider({
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         token,
-
+        setToken,
         register,
         login,
         logout,
-
-        formEmail,
-        setFormEmail,
-
-        password,
-        setPassword,
-
-        usernameError,
-        setUsernameError,
-
-        passwordError,
-        setPasswordError,
-
-        error,
-        setError,
-
-        showPassword,
-        setShowPassword,
-
         loading,
         setLoading,
+        loadingAuth,
       }}
     >
       {children}

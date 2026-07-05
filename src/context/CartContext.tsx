@@ -43,6 +43,10 @@ export function cartReducer(state: CartProduct[], action: CartActions) {
 export type CartContextType = {
   cart: CartProduct[];
   dispatch: Dispatch<CartActions>;
+  mounted: boolean;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  storageAvailable: boolean;
 };
 
 export const CartContext = createContext<CartContextType | null>(null); //initial value null

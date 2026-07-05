@@ -18,6 +18,7 @@ import { FavoriteProvider } from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
 import SidebarProvider from "@/context/SidebarProvider";
 import { Metadata } from "next";
+import CartDrawer from "@/components/CartDrawer";
 // metadata is an object in next.js , when next see it ti converts it as a code in the head in the html file , (it differs from writting it in the html , as we write it here one time only) (bsst paractice to make each page has it's own metadata , but we also write metadata here to be a fallback for any page that dont have a title or description)
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default function RootLayout({
                 <SidebarProvider>
                   <Navbar />
                   <Sidebar />
+                  <CartDrawer />
                   <Toaster />
                   <main>{children}</main>
                   <Footer />

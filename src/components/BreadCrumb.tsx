@@ -1,22 +1,43 @@
 //breadcrumb it's a navigator that help the user to know his location in the site , and to make him navigate backward easily
 
-import Link from "next/link"; // this is a component in netxt that navigate system in the site like a but better than it as it jelp user to navigate between the pages without reloading
+import Link from "next/link";
 import { Product } from "@/types";
-function BreadCrumb({ product }: Product) {
-  if (!product) return null;
 
+function BreadCrumb({
+  product,
+  category,
+}: {
+  product?: Product;
+  category?: string;
+}) {
   return (
-    <div className="text-lg text-gray-500 flex gap-2 my-4 pl-4">
-      <Link href="/">Home</Link>
-
-      <span>{">"}</span>
-      <Link href={`/?category=${encodeURIComponent(product.category)}`}>
-        {product.category}
+    <div className="bg-transparent text-lg text-gray-500 flex gap-2 py-2 pl-4 items-center w-full">
+      <Link href="/" className="text-gray-500 hover:underline">
+        Home
       </Link>
 
-      <span>{">"}</span>
+      {product && (
+        <>
+          <span>{">"}</span>
+          <Link
+            href={`/?category=${product.category}`} // after ? is the query parameter part
+            className="hover:underline text-gray-500 capitalize"
+          >
+            {product.category}
+          </Link>
+          <span>{">"}</span>
+          <span className="text-black font-medium">{product.title}</span>
+        </>
+      )}
 
-      <span className="text-black font-medium">{product.title}</span>
+      {!product && category && (
+        <>
+          <span>{">"}</span>
+          <span className="text-black font-medium capitalize flex items-center gap-2">
+            {category}
+          </span>
+        </>
+      )}
     </div>
   );
 }

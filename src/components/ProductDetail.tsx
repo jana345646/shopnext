@@ -10,6 +10,7 @@ import FavoriteButton from "./FavoriteButton";
 import RelatedProducts from "./RelatedProducts";
 import BreadCrumb from "./BreadCrumb";
 import { FavoriteContext } from "@/context/FavoriteContext";
+
 function ProductDetail() {
   const productData = useContext(ProductContext);
   const cartData = useContext(CartContext);
@@ -17,12 +18,14 @@ function ProductDetail() {
 
   if (!productData || !cartData || !favoriteData) return null;
 
-  const { product, stepper, SetStepper } = productData;
+  const { product, stepper, setStepper } = productData;
   const { dispatch: cartDispatch } = cartData;
 
   if (!product) return null;
 
   function addToCart() {
+    if (!product) return;
+
     cartDispatch({
       type: "ADD_ITEM",
       payload: {
@@ -38,8 +41,8 @@ function ProductDetail() {
   return (
     <div className="w-full flex flex-col">
       <BreadCrumb product={product} />
-      <div className="h-[30rem] flex items-center justify-center px-[5rem] gap-[7rem]">
-        <div className="relative w-[20%] h-full flex items-center justify-center">
+      <div className="flex items-center justify-center px-[5rem] gap-[7rem]">
+        <div className="relative w-[20%] h-[30rem] flex">
           <Image
             src={product.image}
             alt={product.title}
@@ -55,30 +58,32 @@ function ProductDetail() {
             <FavoriteButton product={product} />
           </div>
 
-          <RatingStars rate={product?.rating?.rate ?? 0} />
+          <div className="flex items-center justify-between">
+            <RatingStars rate={product.rating.rate} />
+            <span className="text-gray-800 font-bold">{product.category}</span>
+          </div>
 
           <div className="flex items-center gap-1">
             <FiEye />
-            <span>{product?.rating?.count}</span>
+            <span>{product.rating.count}</span>
           </div>
 
           <span className="font-bold text-[1.5rem]">${product.price}</span>
-          <span className="text-sm text-[#00000099] leading-[1.5rem]">
+          <span className="text-sm text-[#00000099]">
             {product.description}
           </span>
-          <span className="text-gray-600">{product.category}</span>
 
           <div className="flex justify-between">
             <div className="flex w-[10rem] bg-[#F0F0F0] rounded-[3rem] p-3 justify-around">
               <button
-                onClick={() => SetStepper((p) => p - 1)}
+                onClick={() => setStepper((p) => p - 1)}
                 disabled={stepper === 1}
               >
                 <FiMinus />
               </button>
               <span>{stepper}</span>
               <button
-                onClick={() => SetStepper((p) => p + 1)}
+                onClick={() => setStepper((p) => p + 1)}
                 disabled={stepper === 99}
               >
                 <FiPlus />

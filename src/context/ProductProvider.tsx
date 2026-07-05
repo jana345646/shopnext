@@ -2,44 +2,37 @@
 import { ProductContext } from "./ProductContext";
 import { useState, useEffect } from "react";
 import { Product } from "@/types";
-import Link from "next/link";
+import { fetchProduct } from "@/lib/api";
 
 interface ProviderProps {
-  children: React.ReactNode;
-  serverProduct: Product | null;
+  children: React.ReactNode; // as in the page.tsx an object will be sent from it with this 2 parameters
   id: string;
 }
 
-function ProductProvider({ children, serverProduct, id }: ProviderProps) {
-  const [product, SetProduct] = useState<Product | null>(serverProduct);
-  const [stepper, SetStepper] = useState<number>(1);
+function ProductProvider({ children, id }: ProviderProps) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [stepper, setStepper] = useState<number>(1);
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     async function getProduct() {
       try {
-        const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-        if (!res.ok) {
+        const data = await fetchProduct(id);
+
+        if (!data) {
           setNotFound(true);
           return;
         }
-        const text = await res.text();
-        if (!text) {
-          setNotFound(true);
-          return;
-        }
-        const data: Product = JSON.parse(text);
-        SetProduct(data);
+
+        setProduct(data);
       } catch (err) {
         console.error("Client fetch failed:", err);
         setNotFound(true);
       }
     }
 
-    if (!serverProduct) {
-      getProduct();
-    }
-  }, [id, serverProduct]);
+    getProduct();
+  }, [id]);
 
   if (notFound) {
     return (
@@ -60,9 +53,11 @@ function ProductProvider({ children, serverProduct, id }: ProviderProps) {
     <ProductContext.Provider
       value={{
         product,
-        SetProduct,
+        setProduct,
         stepper,
-        SetStepper,
+        setStepper,
+        notFound,
+        setNotFound,
       }}
     >
       {children}
