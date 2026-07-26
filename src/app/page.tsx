@@ -24,7 +24,7 @@ export default function Products() {
   }, [categoryParam, setSelectedCategory]);
 
   return (
-    <div className=" bg-[#E9E9E9]">
+    <div>
       {selectedCategory && <BreadCrumb category={selectedCategory} />}
       <ProductsClient />
     </div>

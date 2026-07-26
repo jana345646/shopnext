@@ -1,0 +1,69 @@
+1) Project overview:
+
+1. next.js: it is a framework built on react (js library) that adds additional features to it like:
+
+1) Routing: next has an automatic routing system as any page in the app folder is a page that has a route , but in react to create the routing it needs to download a library (react-router-dom) and to create the pathes manually
+
+2) SEO: next has the ability to render (client , server , static-side-generation (in the build time(which make the website able to be published on the internet) the fetch is done here and the pages became as a html files so any user needs this page the html file will be send to it instead of sending a request to teh server)) the pages on the server-side (the pages came fully rendered from the server to the browser) so this is better for the seo , but react only renders on the client side (the page is renderd first as an empty page then js renders it's content ) so due that the performance of the seo is slower
+
+3) usage: next we use it to creat ui , backend , routing , but react we use it to build only the ui
+
+2. state: it is the changable data in the project and when it's value changes the components which uses it will be rerendered to update the ui
+
+3. react context: it is a way to mange and share the data between the components without props drilling
+
+4. authentication: it's a strategy to check if the user who logged in is the same user who own's the account or not (if yes => logged in , if no => logged in failed )
+
+5. mock jwt: mock means data for training only , jwt this is a type of a token (which is send after the user logged in succesfully , and it is used later if it is still valid)
+
+6. deployment on vercel : deployment means to uoplad the project on the internet to not to be on our computer only and to be able to the other users to access it , vercel is a platform that uplads the project on a server connected to the internet and give us a url that makes the users able to acces it 
+
+7. useEffect: it is a hook we used it with the side effects (not releated with the ui) (data fetching , timer , local storgae , ...) , and it will be rendered after the component is rendered
+
+8. usecontext: it is a hook that make the components able to reach the data from the context directly without props drilling
+
+9. usereducer: it is a hook to manage the complex states as it take the sate , reducer and the initial value
+
+10. usememo: it is a hook that is used to avoid recalculating the heavy calculations with each render so it will be recalculated only if it's dependencies changed
+
+11. typescript: it is a programming language simillar to the javascript but it allow the developer to identify a type for states , api responses , and props.
+
+12. strict mode this is a mode that make typescriot make more checks on the types.
+
+13. rest apis: this means that we will communicate with this api with the http requests (get , post , ...)
+
+14. Image: this is a component in next which has image optimization features like:
+
+1) image optimization : it optimizes the size and the formats of the image
+
+2) lazy loading: the image will be downloaded when the user reached it by the scrolling only
+
+15. Eslint: A tool that checks code for potential errors and code quality issues
+
+16. prettier: it is a code formatter
+
+2) creating a project:
+
+1. create a folder on the pc then open it on vs code 
+
+2. inside the folder create a react or a next project
+
+3. open fork software and open the project folder in it (local repo)
+
+4. open github an create a new empty repo (remote repo)
+
+5. git the url repo from github and in fork open the remotes then right click and choosa add new remotes and paste the github repo link (connecting the local repo with the remote repo) and published
+
+6. every feature has a specific branch and when it completly ends we merge it with the main and push
+
+3) layout (main files of the project , navbar , footer , sidebar ,  fonts) :
+
+1. globals.css: this file is created in the app folder because it will be imported in the layout file which holds all teh project pages
+
+2. layout.tsx: this file is a wrapper as all the pages of the project runs inside it , and we put inside it also the static components that will be shared in all pages
+
+3. export: we can use it multiple times in the file (but we must imported with it's same name in it's main folder)
+
+4. export default: we use it only one time for the main thing we want to export it (component) , we can import it witha different name
+
+5. responsive in tailwind: tailwind has some break points (we usually don't use a breakpoint for the mobile , tablet "md" , desktop "lg" "not a rule") so tailwind works with the concept of mobile first (the code without any prefix will be done on the mobile screen thwn on the larger if no prefix is added to it)  

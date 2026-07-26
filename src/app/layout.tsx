@@ -1,10 +1,6 @@
-// layout.tsx file is a wrapper that all the pages run inside it
-
 import "./globals.css";
 import { Inter } from "next/font/google"; // this is a function from google fonts that get this font from google fonts
 import { Toaster } from "react-hot-toast"; // toaster is a component inside the react-hot-toast library that help the developer to display a notification to the user (dont stop th app and dissaperes automatic after few minutes not like the alter box)
-
-//static components that will be shared through the whole project
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -17,11 +13,11 @@ import { CartProvider } from "@/context/CartProvider";
 import { FavoriteProvider } from "@/context/FavoriteProvider";
 import AuthProvider from "@/context/AuthProvider";
 import SidebarProvider from "@/context/SidebarProvider";
-import { Metadata } from "next";
+import { Metadata } from "next"; // metadata is an object type in next.js , when next see it , it converts it as a code in the head in the html file , ( as we write it here one time only) (bsst paractice to make each page has it's own metadata , but we also write metadata here to be a fallback for any page that dont have a title or description)
 import CartDrawer from "@/components/CartDrawer";
-// metadata is an object in next.js , when next see it ti converts it as a code in the head in the html file , (it differs from writting it in the html , as we write it here one time only) (bsst paractice to make each page has it's own metadata , but we also write metadata here to be a fallback for any page that dont have a title or description)
 
 export const metadata: Metadata = {
+  // we put export here to make next able to understand and use this metadata
   title: "ShopNext",
   description: "Online shopping app",
 };
@@ -33,11 +29,12 @@ const inter = Inter({
 });
 
 export default function RootLayout({
+  // we export the layout to make next understands that this is the layout file
   children, // next.js sends the children automatically to the layout
 }: {
   children: React.ReactNode;
 }) {
-  // in the body we must put this code to apply the font on the website
+  // in the body we must put this code to apply the font on the website (object.)
   // the order of the providers depends on which one needs the other
   return (
     <html lang="en">
